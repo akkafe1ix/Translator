@@ -1,0 +1,13 @@
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\WindowsFormsAppTranslator.exe.config
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\WindowsFormsAppTranslator.exe
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\WindowsFormsAppTranslator.pdb
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\ClassLibraryTranslator.dll
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\ClassLibraryTranslator.pdb
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.AssemblyReference.cache
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.Form1.resources
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.Properties.Resources.resources
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.GenerateResource.cache
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.CoreCompileInputs.cache
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.CopyComplete
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.exe
+C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.pdb
