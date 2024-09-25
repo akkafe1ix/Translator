@@ -58,6 +58,10 @@ namespace ClassLibraryTranslator
                 charPositionInLine = 0;
                 ReadNextChar();
             }
+            else
+            {
+                throw new Exception("Ошибка! Указан некорректный путь к файлу!");
+            }
         }
 
         /// <summary>

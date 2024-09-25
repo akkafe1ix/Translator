@@ -4,3 +4,9 @@ C:\Users\Huawei\Desktop\7 Семестр\Теорич языков програ�
 C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.csproj.CoreCompileInputs.cache
 C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.dll
 C:\Users\Huawei\Desktop\7 Семестр\Теорич языков программирования (Калабин)\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.pdb
+C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\ClassLibraryTranslator\bin\Debug\ClassLibraryTranslator.dll
+C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\ClassLibraryTranslator\bin\Debug\ClassLibraryTranslator.pdb
+C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.csproj.AssemblyReference.cache
+C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.csproj.CoreCompileInputs.cache
+C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.dll
+C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\ClassLibraryTranslator\obj\Debug\ClassLibraryTranslator.pdb
