@@ -274,7 +274,7 @@ namespace ClassLibraryTranslator
 
 			while (char.IsLetter(Convert.ToChar(Reader.CurrentChar)))
 			{
-				name += Reader.CurrentChar;
+				name += Convert.ToChar(Reader.CurrentChar);
 				Reader.ReadNextChar();
 			}
 
@@ -291,7 +291,7 @@ namespace ClassLibraryTranslator
 
 			while (char.IsDigit(Convert.ToChar(Reader.CurrentChar)))
 			{
-				number += Reader.CurrentChar;
+				number += Convert.ToChar(Reader.CurrentChar);
 				Reader.ReadNextChar();
 			}
 
@@ -304,6 +304,11 @@ namespace ClassLibraryTranslator
 			currentLexem = Lexems.Number;
 		}
 
+		//Получение текущей Лексемы
+		static public Lexems CurrentLexem
+		{
+			get { return currentLexem; }
+		}
 
 	}
 }

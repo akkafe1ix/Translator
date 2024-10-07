@@ -1,8 +1,4 @@
-Мама
-Па па
--
+int a, b
+begin
 
-Ко  л
-я
-
-fffff
+end
