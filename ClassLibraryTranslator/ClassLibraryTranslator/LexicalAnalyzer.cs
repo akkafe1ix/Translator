@@ -310,5 +310,11 @@ namespace ClassLibraryTranslator
 			get { return currentLexem; }
 		}
 
+		//Получение текущего мени
+		static public string CurrentName
+		{
+			get { return currentName; }
+		}
+
 	}
 }
