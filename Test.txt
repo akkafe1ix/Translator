@@ -1,4 +1,4 @@
-﻿int a, b
+﻿int a,b
 begin
     a = 0
     b = 10

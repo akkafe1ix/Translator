@@ -15,7 +15,8 @@ namespace ConsoleTests
         {
             string path = "C:\\Users\\Администратор\\Desktop\\Translator\\Test.txt";
             //Test1(path);
-            Test2(path);
+            //Test2(path);
+            Test3(path);
             Console.ReadLine();
         }
         /// <summary>
@@ -79,5 +80,20 @@ namespace ConsoleTests
             }
         }
 
+        /// <summary>
+        /// Тест компиляции и синтаксического анализатора
+        /// </summary>
+        /// <param name="path">Путь к файлу</param>
+        static public void Test3(string path)
+        {
+            Reader.Initialize(path);
+
+
+            SyntaxAnalyzer.Compile();
+            foreach (string err in Errors.GetErrors)
+            {
+                Console.WriteLine(err);
+            }
+        }
     }
 }
