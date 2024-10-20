@@ -50,11 +50,89 @@ namespace ClassLibraryTranslator
         }
 
         /// <summary>
-        /// Метод компиляции
+        /// Метод разбора последоовательности инструкций
         /// </summary>
+        private static void ParseSequenceOfInstructions()
+        {
+            ParseInstruction();
+            while (LexicalAnalyzer.CurrentLexem == Lexems.Delimiter)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+                ParseInstruction();
+            }
+        }
+
+        /// <summary>
+        /// Метод для разбора инструкции
+        /// </summary>
+        private static void ParseInstruction()
+        {
+            if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+            {
+                Identifier? x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
+                if (x != null)
+                {
+                    ParseAssingInstruction(x.Value.type);
+                }
+                else
+                {
+                    Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.CurrentName}. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Разбор функции присваивания
+        /// </summary>
+        /// <param name="varType">Тип переменной</param>
+        private static void ParseAssingInstruction(tType varType)
+        {
+            LexicalAnalyzer.ParseNextLexem();
+            if (LexicalAnalyzer.CurrentLexem == Lexems.Assign)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+                tType t = ParseExpression();
+                if (varType != t)
+                {
+                    Errors.AddError($"Несовместимые типы при присваивании.");
+                }
+            }
+            else
+            {
+                Errors.AddError($"Не удалось распарсить инструкцию присваивания. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+            }
+        }
+
+        /// <summary>
+        /// Разобрать выражение
+        /// </summary>
+        /// <returns>Тип переменной</returns>
+        private static tType ParseExpression()
+        { 
+        
+            while (LexicalAnalyzer.CurrentLexem != Lexems.Delimiter)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+            }
+            return tType.Int;
+
+
+        }
+
+            /// <summary>
+            /// Метод компиляции
+            /// </summary>
         public static void Compile()
         {
             ParseDecVar();
+            if (LexicalAnalyzer.CurrentLexem == Lexems.Begin)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+            }
+            LexicalAnalyzer.ParseNextLexem();
+            ParseSequenceOfInstructions();
+            CheckLexem(Lexems.End);
+
         }
     }
 }
