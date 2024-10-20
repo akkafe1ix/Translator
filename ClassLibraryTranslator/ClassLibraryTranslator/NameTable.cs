@@ -51,12 +51,13 @@ namespace ClassLibraryTranslator
         }
 
         // Добавление идентификатора в таблицу с указанием категории, но без типа.
-        public static Identifier AddIdentifier(string name, tCat category)
+        public static Identifier? AddIdentifier(string name, tCat category)
         {
             // Проверка на существование идентификатора с таким же именем.
             if (identifiers.Any(ident => ident.name == name))
             {
-                throw new ArgumentException($"Identifier '{name}' уже существует."); // Выбрасываем исключение при дублировании
+                //throw new ArgumentException($"Identifier '{name}' уже существует."); // Выбрасываем исключение при дублировании
+                return null;
             }
 
             // Создаем новый идентификатор с заданным именем и категорией, но типом по умолчанию (None).
@@ -66,12 +67,13 @@ namespace ClassLibraryTranslator
         }
 
         // Добавление идентификатора в таблицу с указанием категории и типа.
-        public static Identifier AddIdentifier(string name, tCat category, tType type)
+        public static Identifier? AddIdentifier(string name, tCat category, tType type)
         {
             // Проверка на существование идентификатора с таким же именем.
             if (identifiers.Any(ident => ident.name == name))
             {
-                throw new ArgumentException($"Identifier '{name}' уже существует."); // Выбрасываем исключение при дублировании
+                //throw new ArgumentException($"Identifier '{name}' уже существует."); // Выбрасываем исключение при дублировании
+                return null;
             }
 
             // Создаем новый идентификатор с заданным именем, категорией и типом.
@@ -81,7 +83,7 @@ namespace ClassLibraryTranslator
         }
 
         // Поиск идентификатора по имени.
-        public static Identifier FindIdentifier(string name)
+        public static Identifier? FindIdentifier(string name)
         {
             // Начинаем поиск с первого элемента списка.
             LinkedListNode<Identifier> node = identifiers.First;
@@ -95,7 +97,8 @@ namespace ClassLibraryTranslator
             // Если идентификатор не найден, выбрасываем исключение.
             if (node == null)
             {
-                throw new KeyNotFoundException($"Identifier '{name}' не найден."); // Идентификатор с таким именем не найден
+                //throw new KeyNotFoundException($"Identifier '{name}' не найден."); // Идентификатор с таким именем не найден
+                return null;
             }
 
             return node.Value; // Возвращаем найденный идентификатор

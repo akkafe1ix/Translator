@@ -56,7 +56,7 @@ namespace ConsoleTests
                     // Попытка найти идентификатор
                     try
                     {
-                        Identifier foundIdentifier = NameTable.FindIdentifier(currentName);
+                        Identifier? foundIdentifier = NameTable.FindIdentifier(currentName);
                         // Если идентификатор найден, пропускаем его
                     }
                     catch (KeyNotFoundException)

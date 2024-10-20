@@ -31,7 +31,9 @@ namespace ClassLibraryTranslator
                 Errors.AddError($"Ожидалось объявление переменной (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
             else
             {
-                NameTable.AddIdentifier(LexicalAnalyzer.CurrentName, tCat.Var, tType.Int);
+                Identifier? x = NameTable.AddIdentifier(LexicalAnalyzer.CurrentName, tCat.Var, tType.Int);
+                if(x==null)
+                    Errors.AddError($"Переменная с именем {LexicalAnalyzer.CurrentName} уже существет (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
                 LexicalAnalyzer.ParseNextLexem();
             }
 
@@ -42,7 +44,9 @@ namespace ClassLibraryTranslator
                     Errors.AddError($"Ожидалось объявление переменной (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
                 else
                 {
-                    NameTable.AddIdentifier(LexicalAnalyzer.CurrentName, tCat.Var, tType.Int);
+                    Identifier? x=NameTable.AddIdentifier(LexicalAnalyzer.CurrentName, tCat.Var, tType.Int);
+                    if (x == null)
+                        Errors.AddError($"Переменная с именем {LexicalAnalyzer.CurrentName} уже существет (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
                     LexicalAnalyzer.ParseNextLexem();
                 }
             }
@@ -108,21 +112,130 @@ namespace ClassLibraryTranslator
         /// </summary>
         /// <returns>Тип переменной</returns>
         private static tType ParseExpression()
-        { 
-        
-            while (LexicalAnalyzer.CurrentLexem != Lexems.Delimiter)
+        {
+            return ParseAdditionOrSubtraction();
+        }
+
+        /// <summary>
+        /// Разобрать сложение или вычитание
+        /// </summary>
+        /// <returns>тип</returns>
+        private static tType ParseAdditionOrSubtraction()
+        {
+            tType t;
+            Lexems op;
+            if ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus))
+            {
+                op = LexicalAnalyzer.CurrentLexem;
+                LexicalAnalyzer.ParseNextLexem();
+                t = ParseMultiplicationOrDivision();
+            }
+            else
+                t = ParseMultiplicationOrDivision();
+            if ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus))
+            {
+                do
+                {
+                    op = LexicalAnalyzer.CurrentLexem;
+                    LexicalAnalyzer.ParseNextLexem();
+                    tType t2 = ParseMultiplicationOrDivision();
+                    if (t != t2 || t != tType.Int)
+                    {
+                        Errors.AddError("Несовместимые типы для операции сложения/вычитания.");
+                    }
+
+                    switch (op)
+                    {
+                        case Lexems.Plus:
+                            break;
+                        case Lexems.Minus:
+                            break;
+                    }
+                } while ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus));
+
+
+            }
+
+            return t;
+        }
+
+        /// <summary>
+        /// Разобрать умножение или деление
+        /// </summary>
+        /// <returns>тип</returns>
+        private static tType ParseMultiplicationOrDivision()
+        {
+            tType t= ParseSubexpression();
+            Lexems op;
+            if ((LexicalAnalyzer.CurrentLexem == Lexems.Multiplication) || (LexicalAnalyzer.CurrentLexem == Lexems.Division))
+            {
+                do
+                {
+                    op = LexicalAnalyzer.CurrentLexem;
+                    LexicalAnalyzer.ParseNextLexem();
+                    tType t2 = ParseMultiplicationOrDivision();
+                    if (t != t2 || t != tType.Int)
+                    {
+                        Errors.AddError("Несовместимые типы для операции сложения/вычитания.");
+                    }
+
+                    switch (op)
+                    {
+                        case Lexems.Multiplication:
+                            break;
+                        case Lexems.Division:
+                            break;
+                    }
+                } while ((LexicalAnalyzer.CurrentLexem == Lexems.Multiplication) || (LexicalAnalyzer.CurrentLexem == Lexems.Division));
+            }
+            return t;
+        }
+
+
+        /// <summary>
+        /// Разобрать подвыражение
+        /// </summary>
+        /// <returns>тип</returns>
+        private static tType ParseSubexpression()
+        {
+            Identifier? x;
+            tType t = tType.None;
+            if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+            {
+                x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
+                if ((x != null) && (x.Value.category == tCat.Var))
+                {
+                    LexicalAnalyzer.ParseNextLexem();
+                    return x.Value.type;
+                }
+                else
+                {
+                    Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.CurrentName}. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                }
+            }
+            else if (LexicalAnalyzer.CurrentLexem == Lexems.Number)
             {
                 LexicalAnalyzer.ParseNextLexem();
+                return tType.Int;
             }
-            return tType.Int;
-
+            else if (LexicalAnalyzer.CurrentLexem == Lexems.LeftBracket)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+                t = ParseExpression();
+                CheckLexem(Lexems.RightBracket);
+            }
+            else
+            {
+                Errors.AddError($"Недопустимое выражение. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+            }
+            return t;
 
         }
 
             /// <summary>
             /// Метод компиляции
             /// </summary>
-        public static void Compile()
+            public static void Compile()
         {
             ParseDecVar();
             if (LexicalAnalyzer.CurrentLexem == Lexems.Begin)
@@ -132,7 +245,6 @@ namespace ClassLibraryTranslator
             LexicalAnalyzer.ParseNextLexem();
             ParseSequenceOfInstructions();
             CheckLexem(Lexems.End);
-
         }
     }
 }
