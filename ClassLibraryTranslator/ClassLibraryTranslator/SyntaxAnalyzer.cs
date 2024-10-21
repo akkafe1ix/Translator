@@ -235,9 +235,13 @@ namespace ClassLibraryTranslator
             /// <summary>
             /// Метод компиляции
             /// </summary>
-            public static void Compile()
+        public static void Compile()
         {
+            CodeGenerator.DeclareDataSegment();
             ParseDecVar();
+            CodeGenerator.DeclareVariables();
+            CodeGenerator.DeclareStackAndCodeSegments();
+            CheckLexem(Lexems.Delimiter);
             if (LexicalAnalyzer.CurrentLexem == Lexems.Begin)
             {
                 LexicalAnalyzer.ParseNextLexem();
@@ -245,6 +249,9 @@ namespace ClassLibraryTranslator
             LexicalAnalyzer.ParseNextLexem();
             ParseSequenceOfInstructions();
             CheckLexem(Lexems.End);
+            CodeGenerator.DeclareMainProcedureCompletion();
+            CodeGenerator.DeclareCodeCompletion();
+            
         }
     }
 }

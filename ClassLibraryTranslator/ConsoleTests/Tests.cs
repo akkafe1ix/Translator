@@ -88,11 +88,14 @@ namespace ConsoleTests
         {
             Reader.Initialize(path);
 
-
             SyntaxAnalyzer.Compile();
             foreach (string err in Errors.GetErrors)
             {
                 Console.WriteLine(err);
+            }
+            foreach (string str in CodeGenerator.code)
+            {
+                Console.WriteLine(str);
             }
         }
     }
