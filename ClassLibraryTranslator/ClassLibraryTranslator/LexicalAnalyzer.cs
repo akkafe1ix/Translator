@@ -316,5 +316,11 @@ namespace ClassLibraryTranslator
 			get { return currentName; }
 		}
 
+		//Получение текущего числа
+		static public int CurrentNumber
+		{
+			get { return currentNumber; }
+		}
+
 	}
 }

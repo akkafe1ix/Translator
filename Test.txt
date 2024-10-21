@@ -1,5 +1,9 @@
-﻿int a,b,g
+﻿int a, b, c
+
 begin
-    g = 10*10*10
-    b = 10
+    a = 7
+    b = 4
+    a=a*a-(7*b)
+    c=(a-b)*a+b
+    print c
 end

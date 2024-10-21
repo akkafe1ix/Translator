@@ -80,6 +80,29 @@ namespace ClassLibraryTranslator
                 AddInstruction(identifier.name + "  dw    1");
         }
 
+        /// <summary>
+        /// Декларировать процедуру вывода на печать
+        /// </summary>
+        public static void DeclarePrint()
+        {
+            AddInstruction("PRINT PROC NEAR");
+            AddInstruction("MOV   CX, 10");
+            AddInstruction("MOV   DI, BUFEND - PRINT_BUF");
+            AddInstruction("PRINT_LOOP:");
+            AddInstruction("MOV   DX, 0");
+            AddInstruction("DIV   CX");
+            AddInstruction("ADD   DL, '0'");
+            AddInstruction("MOV   [PRINT_BUF + DI - 1], DL");
+            AddInstruction("DEC   DI");
+            AddInstruction("CMP   AL, 0");
+            AddInstruction("JNE   PRINT_LOOP");
+            AddInstruction("LEA   DX, PRINT_BUF");
+            AddInstruction("ADD   DX, DI");
+            AddInstruction("MOV   AH, 09H");
+            AddInstruction("INT   21H");
+            AddInstruction("RET");
+            AddInstruction("PRINT ENDP");
+        }
     }
 
 }

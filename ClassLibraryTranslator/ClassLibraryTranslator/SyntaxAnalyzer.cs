@@ -77,11 +77,17 @@ namespace ClassLibraryTranslator
                 if (x != null)
                 {
                     ParseAssingInstruction(x.Value.type);
+                    CodeGenerator.AddInstruction("pop ax");
+                    CodeGenerator.AddInstruction("mov " + x.Value.name + ", ax");
                 }
                 else
                 {
                     Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.CurrentName}. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
                 }
+            }
+            else if (LexicalAnalyzer.CurrentLexem == Lexems.Print)
+            {
+                ParsePrint();
             }
         }
 
@@ -147,8 +153,16 @@ namespace ClassLibraryTranslator
                     switch (op)
                     {
                         case Lexems.Plus:
+                            CodeGenerator.AddInstruction("pop bx");
+                            CodeGenerator.AddInstruction("pop ax");
+                            CodeGenerator.AddInstruction("add ax, bx");
+                            CodeGenerator.AddInstruction("push ax");
                             break;
                         case Lexems.Minus:
+                            CodeGenerator.AddInstruction("pop bx");
+                            CodeGenerator.AddInstruction("pop ax");
+                            CodeGenerator.AddInstruction("sub ax, bx");
+                            CodeGenerator.AddInstruction("push ax");
                             break;
                     }
                 } while ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus));
@@ -182,8 +196,17 @@ namespace ClassLibraryTranslator
                     switch (op)
                     {
                         case Lexems.Multiplication:
+                            CodeGenerator.AddInstruction("pop bx");
+                            CodeGenerator.AddInstruction("pop ax");
+                            CodeGenerator.AddInstruction("mul bx");
+                            CodeGenerator.AddInstruction("push ax");
                             break;
                         case Lexems.Division:
+                            CodeGenerator.AddInstruction("pop bx");
+                            CodeGenerator.AddInstruction("pop ax");
+                            CodeGenerator.AddInstruction("cwd");
+                            CodeGenerator.AddInstruction("div bl");
+                            CodeGenerator.AddInstruction("push ax");
                             break;
                     }
                 } while ((LexicalAnalyzer.CurrentLexem == Lexems.Multiplication) || (LexicalAnalyzer.CurrentLexem == Lexems.Division));
@@ -205,6 +228,8 @@ namespace ClassLibraryTranslator
                 x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
                 if ((x != null) && (x.Value.category == tCat.Var))
                 {
+                    CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.CurrentName);
+                    CodeGenerator.AddInstruction("push ax");
                     LexicalAnalyzer.ParseNextLexem();
                     return x.Value.type;
                 }
@@ -215,6 +240,8 @@ namespace ClassLibraryTranslator
             }
             else if (LexicalAnalyzer.CurrentLexem == Lexems.Number)
             {
+                CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.CurrentNumber);
+                CodeGenerator.AddInstruction("push ax");
                 LexicalAnalyzer.ParseNextLexem();
                 return tType.Int;
             }
@@ -232,9 +259,27 @@ namespace ClassLibraryTranslator
 
         }
 
-            /// <summary>
-            /// Метод компиляции
-            /// </summary>
+        private static void ParsePrint()
+        {
+            CheckLexem(Lexems.Print);
+            if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+            {
+                Identifier? x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
+                CodeGenerator.AddInstruction("push ax");
+                CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.CurrentName);
+                CodeGenerator.AddInstruction("CALL PRINT");
+                CodeGenerator.AddInstruction("pop ax");
+                LexicalAnalyzer.ParseNextLexem();
+            }
+            else
+            {
+                Errors.AddError($"Не удалось распарсить выражение вывода. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+            }
+        }
+
+        /// <summary>
+        /// Метод компиляции
+        /// </summary>
         public static void Compile()
         {
             CodeGenerator.DeclareDataSegment();
@@ -250,6 +295,7 @@ namespace ClassLibraryTranslator
             ParseSequenceOfInstructions();
             CheckLexem(Lexems.End);
             CodeGenerator.DeclareMainProcedureCompletion();
+            CodeGenerator.DeclarePrint();
             CodeGenerator.DeclareCodeCompletion();
             
         }
