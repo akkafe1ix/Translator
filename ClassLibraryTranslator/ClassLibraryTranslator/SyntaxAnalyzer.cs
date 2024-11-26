@@ -89,6 +89,14 @@ namespace ClassLibraryTranslator
             {
                 ParsePrint();
             }
+            else if (LexicalAnalyzer.CurrentLexem == Lexems.If)
+            {
+                ParseConditionalStatement();
+            }
+            else if (LexicalAnalyzer.CurrentLexem == Lexems.While)
+            {
+                ParseWhileLoop();
+            }
         }
 
         /// <summary>
@@ -119,7 +127,28 @@ namespace ClassLibraryTranslator
         /// <returns>Тип переменной</returns>
         private static tType ParseExpression()
         {
-            return ParseAdditionOrSubtraction();
+            tType t= ParseAdditionOrSubtraction();
+            if(LexicalAnalyzer.CurrentLexem==Lexems.Equal || 
+                LexicalAnalyzer.CurrentLexem == Lexems.NotEqual || 
+                LexicalAnalyzer.CurrentLexem == Lexems.Less ||
+                LexicalAnalyzer.CurrentLexem == Lexems.Greater ||
+                LexicalAnalyzer.CurrentLexem == Lexems.LessOrEqual ||
+                LexicalAnalyzer.CurrentLexem == Lexems.GreaterOrEqual)
+            {
+                switch (LexicalAnalyzer.CurrentLexem)
+                {
+
+                }
+                LexicalAnalyzer.ParseNextLexem();
+                ParseAdditionOrSubtraction();
+                t = tType.Bool;
+                // Проверка типов для операции сравнения (например, только сравнение числовых типов)
+                if (t != tType.Int)
+                {
+                    Errors.AddError("Несовместимые типы для операции сравнения.");
+                }
+            }
+            return t;
         }
 
         /// <summary>
@@ -174,10 +203,46 @@ namespace ClassLibraryTranslator
         }
 
         /// <summary>
-        /// Разобрать умножение или деление
+        /// Разобрать Ветвление if
         /// </summary>
-        /// <returns>тип</returns>
-        private static tType ParseMultiplicationOrDivision()
+        private static void ParseConditionalStatement()
+        {
+            CheckLexem(Lexems.If);
+            ParseExpression();
+            CheckLexem(Lexems.Then);
+            ParseSequenceOfInstructions();
+            while (LexicalAnalyzer.CurrentLexem == Lexems.ElseIf)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+                ParseExpression();
+                CheckLexem(Lexems.Then);
+                ParseSequenceOfInstructions();
+            }
+            if (LexicalAnalyzer.CurrentLexem == Lexems.Else)
+            {
+                LexicalAnalyzer.ParseNextLexem();
+                ParseSequenceOfInstructions();
+            }
+            CheckLexem(Lexems.EndIf);
+        }
+
+        /// <summary>
+        /// Разобрать цикл while
+        /// </summary>
+        private static void ParseWhileLoop()
+        {
+            CheckLexem(Lexems.While);
+            ParseExpression();
+            ParseSequenceOfInstructions();
+            CheckLexem(Lexems.While);
+        }
+
+
+            /// <summary>
+            /// Разобрать умножение или деление
+            /// </summary>
+            /// <returns>тип</returns>
+            private static tType ParseMultiplicationOrDivision()
         {
             tType t= ParseSubexpression();
             Lexems op;
