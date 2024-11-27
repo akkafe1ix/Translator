@@ -9,12 +9,29 @@ namespace ClassLibraryTranslator
     public static class CodeGenerator
     {
         static public List<string> code;
-        private static int countLabels;
+        private static int _countLabels;
 
         static CodeGenerator()
         {
             code = new List<string>();
-            countLabels = 0;
+            _countLabels = 0;
+        }
+
+        /// <summary>
+        /// Увеличение кол-ва меток
+        /// </summary>
+        public static void AddLabel()
+        {
+            _countLabels++;
+        }
+
+        /// <summary>
+        /// Получить текущую метку
+        /// </summary>
+        /// <returns>текущая метка</returns>
+        public static string ReturnCurrentLabel()
+        {
+            return "lable" + _countLabels;
         }
 
         /// <summary>

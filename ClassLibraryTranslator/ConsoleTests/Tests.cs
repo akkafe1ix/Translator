@@ -13,7 +13,7 @@ namespace ConsoleTests
     {
         static void Main(string[] args)
         {
-            string path = "C:\\Users\\Администратор\\Desktop\\Translator\\Test.txt";
+            string path = "C:\\Users\\Администратор\\Desktop\\Translator\\TestElseIfEasy.txt";
             //Test1(path);
             //Test2(path);
             Test3(path);
@@ -29,9 +29,9 @@ namespace ConsoleTests
             Reader.Initialize(path);
 
             //Проход по всем лексемам
-            while (LexicalAnalyzer.CurrentLexem!=Lexems.EOF)
+            while (LexicalAnalyzer.Lexem!=Lexems.EOF)
             {
-                Console.WriteLine(LexicalAnalyzer.CurrentLexem);
+                Console.WriteLine(LexicalAnalyzer.Lexem);
                 LexicalAnalyzer.ParseNextLexem();
             }
         }
@@ -47,11 +47,11 @@ namespace ConsoleTests
             NameTable.Initialize();
 
             // Обработка лексем
-            while (LexicalAnalyzer.CurrentLexem != Lexems.EOF)
+            while (LexicalAnalyzer.Lexem != Lexems.EOF)
             {
-                if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+                if (LexicalAnalyzer.Lexem == Lexems.Name)
                 {
-                    string currentName = LexicalAnalyzer.CurrentName;
+                    string currentName = LexicalAnalyzer.Name;
 
                     // Попытка найти идентификатор
                     try

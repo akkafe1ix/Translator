@@ -9,14 +9,16 @@ namespace ClassLibraryTranslator
 {
     public static class SyntaxAnalyzer
     {
+
+        private static string currentLabel = "";
         /// <summary>
         /// Проверка лексемы
         /// </summary>
         /// <param name="expectLexem">Ожидаемая лексема</param>
         public static void CheckLexem(Lexems expectLexem)
         {
-            if (LexicalAnalyzer.CurrentLexem != expectLexem)
-                Errors.AddError($"Ожидалось {expectLexem}, а получили {LexicalAnalyzer.CurrentLexem} (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
+            if (LexicalAnalyzer.Lexem != expectLexem)
+                Errors.AddError($"Ожидалось {expectLexem}, а получили {LexicalAnalyzer.Lexem} (Строка:{Reader.LineNumber}, позиция:{Reader.PositionInLine}, символ:'{Convert.ToChar(Reader.Character)}') ");
             else
                 LexicalAnalyzer.ParseNextLexem();
         }
@@ -27,26 +29,26 @@ namespace ClassLibraryTranslator
         public static void ParseDecVar()
         {
             CheckLexem(Lexems.Type);
-            if (LexicalAnalyzer.CurrentLexem != Lexems.Name)
-                Errors.AddError($"Ожидалось объявление переменной (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
+            if (LexicalAnalyzer.Lexem != Lexems.Name)
+                Errors.AddError($"Ожидалось объявление переменной (Строка:{Reader.LineNumber}, позиция:{Reader.PositionInLine}, символ:'{Convert.ToChar(Reader.Character)}') ");
             else
             {
-                Identifier? x = NameTable.AddIdentifier(LexicalAnalyzer.CurrentName, tCat.Var, tType.Int);
+                Identifier? x = NameTable.AddIdentifier(LexicalAnalyzer.Name, tCat.Var, tType.Int);
                 if(x==null)
-                    Errors.AddError($"Переменная с именем {LexicalAnalyzer.CurrentName} уже существет (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
+                    Errors.AddError($"Переменная с именем {LexicalAnalyzer.Name} уже существет (Строка:{Reader.LineNumber}, позиция:{Reader.PositionInLine}, символ:'{Convert.ToChar(Reader.Character)}') ");
                 LexicalAnalyzer.ParseNextLexem();
             }
 
-            while (LexicalAnalyzer.CurrentLexem == Lexems.Comma)
+            while (LexicalAnalyzer.Lexem == Lexems.Comma)
             {
                 LexicalAnalyzer.ParseNextLexem();
-                if (LexicalAnalyzer.CurrentLexem != Lexems.Name)
-                    Errors.AddError($"Ожидалось объявление переменной (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
+                if (LexicalAnalyzer.Lexem != Lexems.Name)
+                    Errors.AddError($"Ожидалось объявление переменной (Строка:{Reader.LineNumber}, позиция:{Reader.PositionInLine}, символ:'{Convert.ToChar(Reader.Character)}') ");
                 else
                 {
-                    Identifier? x=NameTable.AddIdentifier(LexicalAnalyzer.CurrentName, tCat.Var, tType.Int);
+                    Identifier? x=NameTable.AddIdentifier(LexicalAnalyzer.Name, tCat.Var, tType.Int);
                     if (x == null)
-                        Errors.AddError($"Переменная с именем {LexicalAnalyzer.CurrentName} уже существет (Строка:{Reader.LineNumber}, позиция:{Reader.CharPositionInLine}, символ:'{Convert.ToChar(Reader.CurrentChar)}') ");
+                        Errors.AddError($"Переменная с именем {LexicalAnalyzer.Name} уже существет (Строка:{Reader.LineNumber}, позиция:{Reader.PositionInLine}, символ:'{Convert.ToChar(Reader.Character)}') ");
                     LexicalAnalyzer.ParseNextLexem();
                 }
             }
@@ -59,7 +61,7 @@ namespace ClassLibraryTranslator
         private static void ParseSequenceOfInstructions()
         {
             ParseInstruction();
-            while (LexicalAnalyzer.CurrentLexem == Lexems.Delimiter)
+            while (LexicalAnalyzer.Lexem == Lexems.Delimiter)
             {
                 LexicalAnalyzer.ParseNextLexem();
                 ParseInstruction();
@@ -71,9 +73,9 @@ namespace ClassLibraryTranslator
         /// </summary>
         private static void ParseInstruction()
         {
-            if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+            if (LexicalAnalyzer.Lexem == Lexems.Name)
             {
-                Identifier? x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
+                Identifier? x = NameTable.FindIdentifier(LexicalAnalyzer.Name);
                 if (x != null)
                 {
                     ParseAssingInstruction(x.Value.type);
@@ -82,18 +84,18 @@ namespace ClassLibraryTranslator
                 }
                 else
                 {
-                    Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.CurrentName}. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                    Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.Name}. (Строка {Reader.LineNumber}, позиция {Reader.PositionInLine}, символ '{Reader.Character}')");
                 }
             }
-            else if (LexicalAnalyzer.CurrentLexem == Lexems.Print)
+            else if (LexicalAnalyzer.Lexem == Lexems.Print)
             {
                 ParsePrint();
             }
-            else if (LexicalAnalyzer.CurrentLexem == Lexems.If)
+            else if (LexicalAnalyzer.Lexem == Lexems.If)
             {
                 ParseConditionalStatement();
             }
-            else if (LexicalAnalyzer.CurrentLexem == Lexems.While)
+            else if (LexicalAnalyzer.Lexem == Lexems.While)
             {
                 ParseWhileLoop();
             }
@@ -106,7 +108,7 @@ namespace ClassLibraryTranslator
         private static void ParseAssingInstruction(tType varType)
         {
             LexicalAnalyzer.ParseNextLexem();
-            if (LexicalAnalyzer.CurrentLexem == Lexems.Assign)
+            if (LexicalAnalyzer.Lexem == Lexems.Assign)
             {
                 LexicalAnalyzer.ParseNextLexem();
                 tType t = ParseExpression();
@@ -117,7 +119,7 @@ namespace ClassLibraryTranslator
             }
             else
             {
-                Errors.AddError($"Не удалось распарсить инструкцию присваивания. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                Errors.AddError($"Не удалось распарсить инструкцию присваивания. (Строка {Reader.LineNumber}, позиция {Reader.PositionInLine}, символ '{Reader.Character}')");
             }
         }
 
@@ -128,25 +130,48 @@ namespace ClassLibraryTranslator
         private static tType ParseExpression()
         {
             tType t= ParseAdditionOrSubtraction();
-            if(LexicalAnalyzer.CurrentLexem==Lexems.Equal || 
-                LexicalAnalyzer.CurrentLexem == Lexems.NotEqual || 
-                LexicalAnalyzer.CurrentLexem == Lexems.Less ||
-                LexicalAnalyzer.CurrentLexem == Lexems.Greater ||
-                LexicalAnalyzer.CurrentLexem == Lexems.LessOrEqual ||
-                LexicalAnalyzer.CurrentLexem == Lexems.GreaterOrEqual)
+            if(LexicalAnalyzer.Lexem == Lexems.Equal || 
+                LexicalAnalyzer.Lexem == Lexems.NotEqual || 
+                LexicalAnalyzer.Lexem == Lexems.Less ||
+                LexicalAnalyzer.Lexem == Lexems.Greater ||
+                LexicalAnalyzer.Lexem == Lexems.LessOrEqual ||
+                LexicalAnalyzer.Lexem == Lexems.GreaterOrEqual)
             {
-                switch (LexicalAnalyzer.CurrentLexem)
+                string transition = "";
+                switch (LexicalAnalyzer.Lexem)
                 {
-
+                    case Lexems.Equal:
+                        transition = "jne";
+                        break;
+                    case Lexems.NotEqual:
+                        transition = "je";
+                        break;
+                    case Lexems.Greater:
+                        transition = "jle";
+                        break;
+                    case Lexems.GreaterOrEqual:
+                        transition = "jl";
+                        break;
+                    case Lexems.Less:
+                        transition = "jge";
+                        break;
+                    case Lexems.LessOrEqual:
+                        transition = "jg";
+                        break;
                 }
                 LexicalAnalyzer.ParseNextLexem();
-                ParseAdditionOrSubtraction();
-                t = tType.Bool;
+                tType t2 = ParseAdditionOrSubtraction();
                 // Проверка типов для операции сравнения (например, только сравнение числовых типов)
-                if (t != tType.Int)
+                if (t != t2 || t != tType.Int)
                 {
                     Errors.AddError("Несовместимые типы для операции сравнения.");
                 }
+                CodeGenerator.AddInstruction("pop ax");
+                CodeGenerator.AddInstruction("pop bx");
+                CodeGenerator.AddInstruction("cmp bx, ax");
+                CodeGenerator.AddInstruction(transition + " " + currentLabel);
+                currentLabel = "";
+                t = tType.Bool;
             }
             return t;
         }
@@ -159,19 +184,19 @@ namespace ClassLibraryTranslator
         {
             tType t;
             Lexems op;
-            if ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus))
+            if ((LexicalAnalyzer.Lexem == Lexems.Plus) || (LexicalAnalyzer.Lexem == Lexems.Minus))
             {
-                op = LexicalAnalyzer.CurrentLexem;
+                op = LexicalAnalyzer.Lexem;
                 LexicalAnalyzer.ParseNextLexem();
                 t = ParseMultiplicationOrDivision();
             }
             else
                 t = ParseMultiplicationOrDivision();
-            if ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus))
+            if ((LexicalAnalyzer.Lexem == Lexems.Plus) || (LexicalAnalyzer.Lexem == Lexems.Minus))
             {
                 do
                 {
-                    op = LexicalAnalyzer.CurrentLexem;
+                    op = LexicalAnalyzer.Lexem;
                     LexicalAnalyzer.ParseNextLexem();
                     tType t2 = ParseMultiplicationOrDivision();
                     if (t != t2 || t != tType.Int)
@@ -194,7 +219,7 @@ namespace ClassLibraryTranslator
                             CodeGenerator.AddInstruction("push ax");
                             break;
                     }
-                } while ((LexicalAnalyzer.CurrentLexem == Lexems.Plus) || (LexicalAnalyzer.CurrentLexem == Lexems.Minus));
+                } while ((LexicalAnalyzer.Lexem == Lexems.Plus) || (LexicalAnalyzer.Lexem == Lexems.Minus));
 
 
             }
@@ -208,22 +233,41 @@ namespace ClassLibraryTranslator
         private static void ParseConditionalStatement()
         {
             CheckLexem(Lexems.If);
+            CodeGenerator.AddLabel();
+            string lowLabel = CodeGenerator.ReturnCurrentLabel();
+            currentLabel = lowLabel;
+            CodeGenerator.AddLabel();
+            string exitLabel = CodeGenerator.ReturnCurrentLabel();
             ParseExpression();
             CheckLexem(Lexems.Then);
             ParseSequenceOfInstructions();
-            while (LexicalAnalyzer.CurrentLexem == Lexems.ElseIf)
+            CodeGenerator.AddInstruction("jmp " + exitLabel);
+            while (LexicalAnalyzer.Lexem == Lexems.ElseIf)
             {
+                CodeGenerator.AddInstruction(lowLabel + ":");
+                CodeGenerator.AddLabel();
+                lowLabel = CodeGenerator.ReturnCurrentLabel();
+                currentLabel = lowLabel;
+
                 LexicalAnalyzer.ParseNextLexem();
                 ParseExpression();
                 CheckLexem(Lexems.Then);
                 ParseSequenceOfInstructions();
+
+                CodeGenerator.AddInstruction("jmp " + exitLabel);
             }
-            if (LexicalAnalyzer.CurrentLexem == Lexems.Else)
+            if (LexicalAnalyzer.Lexem == Lexems.Else)
             {
+                CodeGenerator.AddInstruction(lowLabel + ":");
                 LexicalAnalyzer.ParseNextLexem();
                 ParseSequenceOfInstructions();
             }
+            else
+            {
+                CodeGenerator.AddInstruction(lowLabel + ":");
+            }
             CheckLexem(Lexems.EndIf);
+            CodeGenerator.AddInstruction(exitLabel + ":");
         }
 
         /// <summary>
@@ -232,9 +276,17 @@ namespace ClassLibraryTranslator
         private static void ParseWhileLoop()
         {
             CheckLexem(Lexems.While);
+            CodeGenerator.AddLabel();
+            string upLabel = CodeGenerator.ReturnCurrentLabel();
+            CodeGenerator.AddLabel();
+            string lowLabel = CodeGenerator.ReturnCurrentLabel();
+            currentLabel = lowLabel;
+            CodeGenerator.AddInstruction(upLabel + ":");
             ParseExpression();
             ParseSequenceOfInstructions();
-            CheckLexem(Lexems.While);
+            CheckLexem(Lexems.EndWhile);
+            CodeGenerator.AddInstruction("jmp " + upLabel);
+            CodeGenerator.AddInstruction(lowLabel + ":");
         }
 
 
@@ -246,11 +298,11 @@ namespace ClassLibraryTranslator
         {
             tType t= ParseSubexpression();
             Lexems op;
-            if ((LexicalAnalyzer.CurrentLexem == Lexems.Multiplication) || (LexicalAnalyzer.CurrentLexem == Lexems.Division))
+            if ((LexicalAnalyzer.Lexem == Lexems.Multiplication) || (LexicalAnalyzer.Lexem == Lexems.Division))
             {
                 do
                 {
-                    op = LexicalAnalyzer.CurrentLexem;
+                    op = LexicalAnalyzer.Lexem;
                     LexicalAnalyzer.ParseNextLexem();
                     tType t2 = ParseMultiplicationOrDivision();
                     if (t != t2 || t != tType.Int)
@@ -274,7 +326,7 @@ namespace ClassLibraryTranslator
                             CodeGenerator.AddInstruction("push ax");
                             break;
                     }
-                } while ((LexicalAnalyzer.CurrentLexem == Lexems.Multiplication) || (LexicalAnalyzer.CurrentLexem == Lexems.Division));
+                } while ((LexicalAnalyzer.Lexem == Lexems.Multiplication) || (LexicalAnalyzer.Lexem == Lexems.Division));
             }
             return t;
         }
@@ -288,29 +340,29 @@ namespace ClassLibraryTranslator
         {
             Identifier? x;
             tType t = tType.None;
-            if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+            if (LexicalAnalyzer.Lexem == Lexems.Name)
             {
-                x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
+                x = NameTable.FindIdentifier(LexicalAnalyzer.Name);
                 if ((x != null) && (x.Value.category == tCat.Var))
                 {
-                    CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.CurrentName);
+                    CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.Name);
                     CodeGenerator.AddInstruction("push ax");
                     LexicalAnalyzer.ParseNextLexem();
                     return x.Value.type;
                 }
                 else
                 {
-                    Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.CurrentName}. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                    Errors.AddError($"Не удалось найти переменную с именем {LexicalAnalyzer.Name}. (Строка {Reader.LineNumber}, позиция {Reader.PositionInLine}, символ '{Reader.Character}')");
                 }
             }
-            else if (LexicalAnalyzer.CurrentLexem == Lexems.Number)
+            else if (LexicalAnalyzer.Lexem == Lexems.Number)
             {
-                CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.CurrentNumber);
+                CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.Number);
                 CodeGenerator.AddInstruction("push ax");
                 LexicalAnalyzer.ParseNextLexem();
                 return tType.Int;
             }
-            else if (LexicalAnalyzer.CurrentLexem == Lexems.LeftBracket)
+            else if (LexicalAnalyzer.Lexem == Lexems.LeftBracket)
             {
                 LexicalAnalyzer.ParseNextLexem();
                 t = ParseExpression();
@@ -318,7 +370,7 @@ namespace ClassLibraryTranslator
             }
             else
             {
-                Errors.AddError($"Недопустимое выражение. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                Errors.AddError($"Недопустимое выражение. (Строка {Reader.LineNumber}, позиция {Reader.PositionInLine}, символ '{Reader.Character}')");
             }
             return t;
 
@@ -327,18 +379,18 @@ namespace ClassLibraryTranslator
         private static void ParsePrint()
         {
             CheckLexem(Lexems.Print);
-            if (LexicalAnalyzer.CurrentLexem == Lexems.Name)
+            if (LexicalAnalyzer.Lexem == Lexems.Name)
             {
-                Identifier? x = NameTable.FindIdentifier(LexicalAnalyzer.CurrentName);
+                Identifier? x = NameTable.FindIdentifier(LexicalAnalyzer.Name);
                 CodeGenerator.AddInstruction("push ax");
-                CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.CurrentName);
+                CodeGenerator.AddInstruction("mov ax, " + LexicalAnalyzer.Name);
                 CodeGenerator.AddInstruction("CALL PRINT");
                 CodeGenerator.AddInstruction("pop ax");
                 LexicalAnalyzer.ParseNextLexem();
             }
             else
             {
-                Errors.AddError($"Не удалось распарсить выражение вывода. (Строка {Reader.LineNumber}, позиция {Reader.CharPositionInLine}, символ '{Reader.CurrentChar}')");
+                Errors.AddError($"Не удалось распарсить выражение вывода. (Строка {Reader.LineNumber}, позиция {Reader.PositionInLine}, символ '{Reader.Character}')");
             }
         }
 
@@ -352,7 +404,7 @@ namespace ClassLibraryTranslator
             CodeGenerator.DeclareVariables();
             CodeGenerator.DeclareStackAndCodeSegments();
             CheckLexem(Lexems.Delimiter);
-            if (LexicalAnalyzer.CurrentLexem == Lexems.Begin)
+            if (LexicalAnalyzer.Lexem == Lexems.Begin)
             {
                 LexicalAnalyzer.ParseNextLexem();
             }

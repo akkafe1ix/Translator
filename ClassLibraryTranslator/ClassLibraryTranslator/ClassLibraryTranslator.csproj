@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Keyword.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="SyntaxAnalyzer.cs" />

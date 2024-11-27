@@ -1,0 +1,11 @@
+int a, b, c
+
+begin
+    a = 7
+    b = 14
+    while (a<14)
+    a=a+1
+    endwhile
+    b = b+a
+    print b
+end

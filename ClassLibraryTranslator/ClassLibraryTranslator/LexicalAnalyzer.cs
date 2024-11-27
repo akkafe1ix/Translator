@@ -63,29 +63,17 @@ namespace ClassLibraryTranslator
 
 	public static class LexicalAnalyzer
     {
-		//Cтруктура ключевого слова
-		private struct Keyword
-		{
-			public string word;
-			public Lexems lex;
-		}
+		private static List<Keyword> _keywords;
+		private static Lexems _lexem;
+		private static string _name;
+		private static int _number;
 
-		private static int keywordPointer; //Счётчи для массива
-		private static Keyword[] keywords ; //Массив соответсвий слова лексеме
-		private static Lexems currentLexem; //Текущая лексема
-		private static string currentName; //Текущий индетификатор
-		private static int currentNumber; //Текучее число
-
-		/// <summary>
-		/// Метод инициальзации
-		/// </summary>
 		static LexicalAnalyzer()
-        {
-			keywordPointer = 0;
-			keywords = new Keyword[200];
-			currentLexem = Lexems.None;
-			currentName = string.Empty;
-			currentNumber = 0;
+		{
+			_keywords = new List<Keyword>();
+			_lexem = Lexems.None;
+			_name = string.Empty;
+			_number = 0;
 
 			AddKeyword("int", Lexems.Type);
 
@@ -113,150 +101,141 @@ namespace ClassLibraryTranslator
 			ParseNextLexem();
 		}
 
-		/// <summary>
-		/// Добавление ключевого слова
-		/// </summary>
-		/// <param name="word">Слово</param>
-		/// <param name="lex">Лексема</param>
-		static public void AddKeyword(string word, Lexems lex)
-        {
-			Keyword kw = new Keyword();
-			kw.word = word;
-			kw.lex = lex;
-			keywords[keywordPointer++] = kw;
-			
-        }
+		public static Lexems Lexem => _lexem;
+		public static string Name => _name;
+		public static int Number => _number;
 
-		/// <summary>
-		/// Полеучение ключевого слова
-		/// </summary>
-		/// <param name="word">Слово</param>
-		/// <returns></returns>
-		static public Lexems GetKeyword(string word)
-        {
-			foreach (Keyword keyword in keywords)
+		private static void AddKeyword(string word, Lexems lexem)
+		{
+			_keywords.Add(new Keyword(word, lexem));
+		}
+
+		private static Lexems GetKeyword(string word)
+		{
+			foreach (Keyword keyword in _keywords)
 				if (keyword.word == word)
-					return keyword.lex;
+					return keyword.lexem;
+
 			return Lexems.Name;
-        }
+		}
 
-
-		/// <summary>
-		/// Метод для чтения следующей лексемы
-		/// </summary>
 		public static void ParseNextLexem()
 		{
-
-			if (Reader.CurrentChar==-1)
+			if (!Reader.IsInitialized)
 			{
-				currentLexem = Lexems.EOF;
+				throw new Exception($"Ошибка! Объект {nameof(Reader)} не был инициализирован!");
+			}
+
+			if (Reader.EOF)
+			{
+				_lexem = Lexems.EOF;
 				return;
 			}
 
-			while (Reader.CurrentChar == ' ')
+			while (Reader.Character == ' ')
 			{
-				Reader.ReadNextChar();
+				Reader.ReadNextCharacter();
 			}
 
-			if (char.IsLetter(Convert.ToChar(Reader.CurrentChar)))
+			if (char.IsLetter(Reader.Character))
 			{
 				ParseName();
 			}
-			else if (char.IsDigit(Convert.ToChar(Reader.CurrentChar)))
+			else if (char.IsDigit(Reader.Character))
 			{
 				ParseNumber();
 			}
-			else if (Reader.CurrentChar == '\n')
+			else if (Reader.Character == '\n')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.Delimiter;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.Delimiter;
 			}
-			else if (Reader.CurrentChar == ',')
+			else if (Reader.Character == ',')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.Comma;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.Comma;
 			}
-			else if (Reader.CurrentChar == '(')
+			else if (Reader.Character == '(')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.LeftBracket;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.LeftBracket;
 			}
-			else if (Reader.CurrentChar == ')')
+			else if (Reader.Character == ')')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.RightBracket;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.RightBracket;
 			}
-			else if (Reader.CurrentChar == '=')
+			else if (Reader.Character == '=')
 			{
-				Reader.ReadNextChar();
-				if (Reader.CurrentChar == '=')
+				Reader.ReadNextCharacter();
+				if (Reader.Character == '=')
 				{
-					Reader.ReadNextChar();
-					currentLexem = Lexems.Equal;
+					Reader.ReadNextCharacter();
+					_lexem = Lexems.Equal;
 				}
 				else
 				{
-					currentLexem = Lexems.Assign;
+					_lexem = Lexems.Assign;
 				}
 			}
-			else if (Reader.CurrentChar == '!')
+			else if (Reader.Character == '!')
 			{
-				Reader.ReadNextChar();
-				if (Reader.CurrentChar == '=')
+				Reader.ReadNextCharacter();
+				if (Reader.Character == '=')
 				{
-					Reader.ReadNextChar();
-					currentLexem = Lexems.NotEqual;
+					Reader.ReadNextCharacter();
+					_lexem = Lexems.NotEqual;
 				}
 				else
 				{
 					throw new Exception("Ошибка! Недопустимый символ!");
 				}
 			}
-			else if (Reader.CurrentChar == '<')
+			else if (Reader.Character == '<')
 			{
-				Reader.ReadNextChar();
-				if (Reader.CurrentChar == '=')
+				Reader.ReadNextCharacter();
+				if (Reader.Character == '=')
 				{
-					Reader.ReadNextChar();
-					currentLexem = Lexems.LessOrEqual;
+					Reader.ReadNextCharacter();
+					_lexem = Lexems.LessOrEqual;
 				}
 				else
 				{
-					currentLexem = Lexems.Less;
+					_lexem = Lexems.Less;
 				}
 			}
-			else if (Reader.CurrentChar == '>')
+			else if (Reader.Character == '>')
 			{
-				Reader.ReadNextChar();
-				if (Reader.CurrentChar == '=')
+				Reader.ReadNextCharacter();
+				if (Reader.Character == '=')
 				{
-					Reader.ReadNextChar();
-					currentLexem = Lexems.GreaterOrEqual;
+					Reader.ReadNextCharacter();
+					_lexem = Lexems.GreaterOrEqual;
 				}
 				else
 				{
-					currentLexem = Lexems.Greater;
+					_lexem = Lexems.Greater;
 				}
 			}
-			else if (Reader.CurrentChar == '+')
+			else if (Reader.Character == '+')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.Plus;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.Plus;
 			}
-			else if (Reader.CurrentChar == '-')
+			else if (Reader.Character == '-')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.Minus;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.Minus;
 			}
-			else if (Reader.CurrentChar == '*')
+			else if (Reader.Character == '*')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.Multiplication;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.Multiplication;
 			}
-			else if (Reader.CurrentChar == '/')
+			else if (Reader.Character == '/')
 			{
-				Reader.ReadNextChar();
-				currentLexem = Lexems.Division;
+				Reader.ReadNextCharacter();
+				_lexem = Lexems.Division;
 			}
 			else
 			{
@@ -264,35 +243,28 @@ namespace ClassLibraryTranslator
 			}
 		}
 
-
-		/// <summary>
-		/// Разобрать идентификатор
-		/// </summary>
 		private static void ParseName()
 		{
 			string name = string.Empty;
 
-			while (char.IsLetter(Convert.ToChar(Reader.CurrentChar)))
+			while (char.IsLetter(Reader.Character))
 			{
-				name += Convert.ToChar(Reader.CurrentChar);
-				Reader.ReadNextChar();
+				name += Reader.Character;
+				Reader.ReadNextCharacter();
 			}
 
-			currentName = name;
-			currentLexem = GetKeyword(name);
+			_name = name;
+			_lexem = GetKeyword(name);
 		}
 
-		/// <summary>
-		/// Разобрать число
-		/// </summary>
 		private static void ParseNumber()
 		{
 			string number = string.Empty;
 
-			while (char.IsDigit(Convert.ToChar(Reader.CurrentChar)))
+			while (char.IsDigit(Reader.Character))
 			{
-				number += Convert.ToChar(Reader.CurrentChar);
-				Reader.ReadNextChar();
+				number += Reader.Character;
+				Reader.ReadNextCharacter();
 			}
 
 			if (!int.TryParse(number, out int result))
@@ -300,26 +272,8 @@ namespace ClassLibraryTranslator
 				throw new Exception("Ошибка! Переполнение типа int!");
 			}
 
-			currentNumber = result;
-			currentLexem = Lexems.Number;
-		}
-
-		//Получение текущей Лексемы
-		static public Lexems CurrentLexem
-		{
-			get { return currentLexem; }
-		}
-
-		//Получение текущего мени
-		static public string CurrentName
-		{
-			get { return currentName; }
-		}
-
-		//Получение текущего числа
-		static public int CurrentNumber
-		{
-			get { return currentNumber; }
+			_number = result;
+			_lexem = Lexems.Number;
 		}
 
 	}

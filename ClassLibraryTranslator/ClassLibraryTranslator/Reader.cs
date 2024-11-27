@@ -12,80 +12,100 @@ namespace ClassLibraryTranslator
     /// </summary>
     public static class Reader
     {
-        static private int lineNumber;  //Номер строки
-        static private int charPositionInLine; //Текущая позиция на строке
-        static private int currentChar; //Текущий символ
+		private static int _lineNumber;
+		private static int _PositionInLine;
+		private static char _Character;
+		private static bool _EOF;
+		private static bool _isInitialized;
+		private static bool _isClosed;
+		private static StreamReader _streamReader;
 
-        static StreamReader streamReader;
+		public static int LineNumber => _lineNumber;
+		public static int PositionInLine => _PositionInLine;
+		public static char Character => _Character;
+		public static bool EOF => _EOF;
+		public static bool IsInitialized => _isInitialized;
 
-        /// <summary>
-        /// Константы для сравнения
-        /// </summary>
-        const int endOfFile = -1;
-        const int newLine = '\n';
-        const int carriageReturn = '\r';
-        const int tab = '\t';
+		static Reader()
+		{
+			_lineNumber = 0;
+			_PositionInLine = -1;
+			_Character = '\0';
+			_EOF = true;
+			_isInitialized = false;
+			_isClosed = true;
+			_streamReader = StreamReader.Null;
+		}
 
-        /// <summary>
-        /// Метод чтения следующего символа
-        /// </summary>
-        static public void ReadNextChar()
-        {
-            currentChar = streamReader.Read();
-            if (currentChar == endOfFile)
-                currentChar = endOfFile;
-            else if (currentChar == newLine)
-            {
-                lineNumber++;
-                charPositionInLine = 0;
-            }
-            else if (currentChar == carriageReturn || currentChar == tab)
-                ReadNextChar();
-            else
-                charPositionInLine++;
-        }
+		public static void Initialize(string path)
+		{
+			if (File.Exists(path))
+			{
+				if (_isInitialized)
+					_streamReader.Close();
 
-        /// <summary>
-        /// Метод инициализации чтения файла
-        /// </summary>
-        /// <param name="filePath">Путь к файлу</param>
-        static public void Initialize(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                streamReader = new StreamReader(filePath);
-                lineNumber = 1;
-                charPositionInLine = 0;
-                ReadNextChar();
-            }
-            else
-            {
-                throw new Exception("Ошибка! Указан некорректный путь к файлу!");
-            }
-        }
+				_lineNumber = 1;
+				_PositionInLine = 0;
+				_EOF = false;
+				_isInitialized = true;
+				_streamReader = new StreamReader(path);
+				_isClosed = false;
 
-        /// <summary>
-        /// Метод закрытия посимвольного чтения файла
-        /// </summary>
-        static public void Close()
-        {
-            streamReader.Close();
-        }
+				ReadNextCharacter();
+			}
+			else
+			{
+				throw new Exception("Ошибка! Указан некорректный путь к файлу!");
+			}
+		}
 
-        //Получение номера строки
-        static public int LineNumber
-        {
-            get { return lineNumber; }
-        }
-        //Получение позиции на строке
-        static public int CharPositionInLine
-        {
-            get { return charPositionInLine; }
-        }
-        //Получение текущего символа 
-        static public int CurrentChar
-        {
-            get { return currentChar; }
-        }
-    }
+		public static void ReadNextCharacter()
+		{
+			if (!_isInitialized)
+			{
+				throw new Exception($"Ошибка! Объект {nameof(Reader)} не был инициализирован!");
+			}
+			if (_isClosed)
+			{
+				throw new Exception("Ошибка! Поток чтения уже был закрыт!");
+			}
+			if (_EOF)
+			{
+				throw new Exception("Ошибка! Достигнут конец файла!");
+			}
+
+			int currentCharacterInt = _streamReader.Read();
+			if (currentCharacterInt == -1)
+			{
+				_EOF = true;
+				return;
+			}
+
+			_Character = (char)currentCharacterInt;
+			if (_Character == '\n')
+			{
+				_lineNumber++;
+				_PositionInLine = 0;
+			}
+			else if (_Character == '\r' || _Character == '\t')
+			{
+				ReadNextCharacter();
+			}
+			else
+			{
+				_PositionInLine++;
+			}
+		}
+
+		public static void Close()
+		{
+			if (!_isInitialized)
+			{
+				throw new Exception($"Ошибка! Объект {nameof(Reader)} не был инициализирован!");
+			}
+
+			_streamReader.Close();
+			_isClosed = true;
+		}
+	}
 }
