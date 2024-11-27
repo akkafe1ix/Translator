@@ -1,7 +1,7 @@
 data segment
-a  dw    1
-b  dw    1
-c  dw    1
+a  dw    0
+b  dw    0
+c  dw    0
 PRINT_BUF DB ' ' DUP(10)
 BUFEND    DB '$'
 data ends

@@ -1,42 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ClassLibraryTranslator
 {
-	/// <summary>
-	/// Класс для хранения ошибок
-	/// </summary>
-    public static class Errors
+    /// <summary>
+    /// Класс для хранения ошибок
+    /// </summary>
+    public class Errors
     {
+        private List<string> _errors; // Список для хранения ошибок
 
-		private static List<string> errors; //Список для хранения ошибок
+        /// <summary>
+        /// Конструктор для инициализации списка ошибок
+        /// </summary>
+        public Errors()
+        {
+            _errors = new List<string>();
+        }
 
-		/// <summary>
-		/// Инициализация класса
-		/// </summary>
-		static Errors()
-		{
-			errors = new List<string>();
-		}
+        /// <summary>
+        /// Добавление ошибки
+        /// </summary>
+        /// <param name="error">Ошибка строковое описание</param>
+        public void AddError(string error)
+        {
+            _errors.Add(error);
+        }
 
-		/// <summary>
-		/// Доабвление ошибки 
-		/// </summary>
-		/// <param name="error">Ошибка строковое описание</param>
-		public static void AddError(string error)
-		{
-			errors.Add(error);
-		}
-
-		/// <summary>
-		/// Вывод списка ошибок
-		/// </summary>
-		public static List<string> GetErrors
-		{
-			get{return errors;}
-		}
-	}
+        /// <summary>
+        /// Получение списка ошибок
+        /// </summary>
+        public List<string> GetErrors => _errors;
+    }
 }

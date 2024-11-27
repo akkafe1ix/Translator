@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassLibraryTranslator
 {
@@ -38,25 +36,24 @@ namespace ClassLibraryTranslator
         }
     }
 
-    // Статический класс для управления таблицей имен идентификаторов.
-    public static class NameTable
+    // Класс для управления таблицей имен идентификаторов.
+    public class NameTable
     {
         // Связный список для хранения всех идентификаторов.
-        private static LinkedList<Identifier> identifiers = new LinkedList<Identifier>();
+        private LinkedList<Identifier> identifiers = new LinkedList<Identifier>();
 
         // Инициализация таблицы имен (очистка списка идентификаторов).
-        public static void Initialize()
+        public void Initialize()
         {
             identifiers.Clear(); // Очищаем список идентификаторов
         }
 
         // Добавление идентификатора в таблицу с указанием категории, но без типа.
-        public static Identifier? AddIdentifier(string name, tCat category)
+        public Identifier? AddIdentifier(string name, tCat category)
         {
             // Проверка на существование идентификатора с таким же именем.
             if (identifiers.Any(ident => ident.name == name))
             {
-                //throw new ArgumentException($"Identifier '{name}' уже существует."); // Выбрасываем исключение при дублировании
                 return null;
             }
 
@@ -67,12 +64,11 @@ namespace ClassLibraryTranslator
         }
 
         // Добавление идентификатора в таблицу с указанием категории и типа.
-        public static Identifier? AddIdentifier(string name, tCat category, tType type)
+        public Identifier? AddIdentifier(string name, tCat category, tType type)
         {
             // Проверка на существование идентификатора с таким же именем.
             if (identifiers.Any(ident => ident.name == name))
             {
-                //throw new ArgumentException($"Identifier '{name}' уже существует."); // Выбрасываем исключение при дублировании
                 return null;
             }
 
@@ -83,7 +79,7 @@ namespace ClassLibraryTranslator
         }
 
         // Поиск идентификатора по имени.
-        public static Identifier? FindIdentifier(string name)
+        public Identifier? FindIdentifier(string name)
         {
             // Начинаем поиск с первого элемента списка.
             LinkedListNode<Identifier> node = identifiers.First;
@@ -94,10 +90,9 @@ namespace ClassLibraryTranslator
                 node = node.Next; // Переход к следующему узлу списка
             }
 
-            // Если идентификатор не найден, выбрасываем исключение.
+            // Если идентификатор не найден, возвращаем null.
             if (node == null)
             {
-                //throw new KeyNotFoundException($"Identifier '{name}' не найден."); // Идентификатор с таким именем не найден
                 return null;
             }
 
@@ -105,13 +100,13 @@ namespace ClassLibraryTranslator
         }
 
         // Получение всех идентификаторов в виде связного списка.
-        public static LinkedList<Identifier> GetIdentifiers()
+        public LinkedList<Identifier> GetIdentifiers()
         {
             return identifiers; // Возвращаем текущий список идентификаторов
         }
 
         // Получение всех идентификаторов в виде списка (List).
-        public static List<Identifier> GetListIdentifiers()
+        public List<Identifier> GetListIdentifiers()
         {
             return identifiers.ToList(); // Преобразуем связный список в обычный список и возвращаем его
         }

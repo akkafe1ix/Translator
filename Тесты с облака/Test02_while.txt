@@ -1,0 +1,9 @@
+int a,b,c, temp, othertemp, newtemp
+
+begin
+    a=7
+    while (a < 14)
+        a=a+1
+    endwhile
+    print a
+end

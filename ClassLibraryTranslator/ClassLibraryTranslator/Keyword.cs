@@ -8,13 +8,14 @@ namespace ClassLibraryTranslator
 {
     public struct Keyword
     {
-        public string word;
-        public Lexems lexem;
+        public string Word { get; }
+        public Lexems Lexem { get; }
 
         public Keyword(string word, Lexems lexem)
         {
-            this.word = word;
-            this.lexem = lexem;
+            Word = word;
+            Lexem = lexem;
         }
     }
+
 }

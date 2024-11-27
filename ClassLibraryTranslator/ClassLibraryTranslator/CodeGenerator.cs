@@ -1,60 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ClassLibraryTranslator
 {
-    public static class CodeGenerator
+    public class CodeGenerator
     {
-        static public List<string> code;
-        private static int _countLabels;
+        public List<string> Code { get; private set; }
+        private int _countLabels;
+        private NameTable _nameTable;
 
-        static CodeGenerator()
+        /// <summary>
+        /// Конструктор для инициализации генератора кода.
+        /// </summary>
+        public CodeGenerator(NameTable nameTable)
         {
-            code = new List<string>();
+            Code = new List<string>();
             _countLabels = 0;
+            _nameTable = nameTable;
         }
 
         /// <summary>
-        /// Увеличение кол-ва меток
+        /// Увеличение количества меток.
         /// </summary>
-        public static void AddLabel()
+        public void AddLabel()
         {
             _countLabels++;
         }
 
         /// <summary>
-        /// Получить текущую метку
+        /// Получить текущую метку.
         /// </summary>
-        /// <returns>текущая метка</returns>
-        public static string ReturnCurrentLabel()
+        /// <returns>Текущая метка.</returns>
+        public string ReturnCurrentLabel()
         {
-            return "lable" + _countLabels;
+            return "label" + _countLabels;
         }
 
         /// <summary>
-        /// Добавление инструкции
+        /// Добавление инструкции.
         /// </summary>
-        /// <param name="instruction">инструкция</param>
-        public static void AddInstruction(string instruction)
+        /// <param name="instruction">Инструкция.</param>
+        public void AddInstruction(string instruction)
         {
-            code.Add(instruction);
+            Code.Add(instruction);
         }
 
         /// <summary>
-        /// Декларирование дата сегмента
+        /// Декларирование сегмента данных.
         /// </summary>
-        public static void DeclareDataSegment()
+        public void DeclareDataSegment()
         {
             AddInstruction("data segment");
         }
 
         /// <summary>
-        /// Декларировать  сегменты стека и кода
+        /// Декларирование сегментов стека и кода.
         /// </summary>
-        public static void DeclareStackAndCodeSegments()
+        public void DeclareStackAndCodeSegments()
         {
             AddInstruction("PRINT_BUF DB ' ' DUP(10)");
             AddInstruction("BUFEND    DB '$'");
@@ -70,37 +71,39 @@ namespace ClassLibraryTranslator
         }
 
         /// <summary>
-        /// Объявление замершения основной процедуры
+        /// Объявление завершения основной процедуры.
         /// </summary>
-        public static void DeclareMainProcedureCompletion()
+        public void DeclareMainProcedureCompletion()
         {
             AddInstruction("mov ax,4c00h");
             AddInstruction("int 21h");
             AddInstruction("main endp");
-
         }
+
         /// <summary>
-        /// Объявление завершения кода
+        /// Объявление завершения кода.
         /// </summary>
-        public static void DeclareCodeCompletion()
+        public void DeclareCodeCompletion()
         {
             AddInstruction("code ends");
             AddInstruction("end main");
         }
 
         /// <summary>
-        /// Декларировать переменные
+        /// Декларирование переменных.
         /// </summary>
-        public static void DeclareVariables()
+        public void DeclareVariables()
         {
-            foreach (Identifier identifier in NameTable.GetListIdentifiers())
-                AddInstruction(identifier.name + "  dw    1");
+            foreach (Identifier identifier in _nameTable.GetListIdentifiers())
+            {
+                AddInstruction(identifier.name + "  dw    0");
+            }
         }
 
         /// <summary>
-        /// Декларировать процедуру вывода на печать
+        /// Декларирование процедуры вывода на печать.
         /// </summary>
-        public static void DeclarePrint()
+        public void DeclarePrint()
         {
             AddInstruction("PRINT PROC NEAR");
             AddInstruction("MOV   CX, 10");
@@ -121,5 +124,4 @@ namespace ClassLibraryTranslator
             AddInstruction("PRINT ENDP");
         }
     }
-
 }

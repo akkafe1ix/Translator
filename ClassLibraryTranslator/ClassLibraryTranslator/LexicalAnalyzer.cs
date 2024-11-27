@@ -1,280 +1,279 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClassLibraryTranslator
 {
-	//Перечисление всех возможных типов лексем
-	public enum Lexems
-	{
-		None,
-
-		EOF,
-		Delimiter,
-		Comma,
-		Assign,
-		LeftBracket,
-		RightBracket,
-
-		Number,
-		Name,
-		Type,
-		Int,
-
-		Less,
-		LessOrEqual,
-		Greater,
-		GreaterOrEqual,
-		Equal,
-		NotEqual,
-
-		Plus,
-		Minus,
-		Multiplication,
-		Division,
-
-		Begin,
-		End,
-		Print,
-
-		If,
-		Then,
-		ElseIf,
-		Else,
-		EndIf,
-
-		While,
-		EndWhile,
-		For,
-		To,
-		Do,
-		Repeat,
-		When,
-		EndFor,
-
-		Not,
-		Or,
-		Xor,
-		And
-	}
-
-
-	public static class LexicalAnalyzer
+    // Перечисление всех возможных типов лексем
+    public enum Lexems
     {
-		private static List<Keyword> _keywords;
-		private static Lexems _lexem;
-		private static string _name;
-		private static int _number;
+        None,
 
-		static LexicalAnalyzer()
-		{
-			_keywords = new List<Keyword>();
-			_lexem = Lexems.None;
-			_name = string.Empty;
-			_number = 0;
+        EOF,
+        Delimiter,
+        Comma,
+        Assign,
+        LeftBracket,
+        RightBracket,
 
-			AddKeyword("int", Lexems.Type);
+        Number,
+        Name,
+        Type,
+        Int,
 
-			AddKeyword("begin", Lexems.Begin);
-			AddKeyword("end", Lexems.End);
-			AddKeyword("print", Lexems.Print);
-			AddKeyword("if", Lexems.If);
-			AddKeyword("then", Lexems.Then);
-			AddKeyword("elseif", Lexems.ElseIf);
-			AddKeyword("else", Lexems.Else);
-			AddKeyword("endif", Lexems.EndIf);
-			AddKeyword("while", Lexems.While);
-			AddKeyword("endwhile", Lexems.EndWhile);
-			AddKeyword("for", Lexems.For);
-			AddKeyword("to", Lexems.To);
-			AddKeyword("do", Lexems.Do);
-			AddKeyword("repeat", Lexems.Repeat);
-			AddKeyword("when", Lexems.When);
-			AddKeyword("endfor", Lexems.EndFor);
-			AddKeyword("not", Lexems.Not);
-			AddKeyword("or", Lexems.Or);
-			AddKeyword("xor", Lexems.Xor);
-			AddKeyword("and", Lexems.And);
+        Less,
+        LessOrEqual,
+        Greater,
+        GreaterOrEqual,
+        Equal,
+        NotEqual,
 
-			ParseNextLexem();
-		}
+        Plus,
+        Minus,
+        Multiplication,
+        Division,
 
-		public static Lexems Lexem => _lexem;
-		public static string Name => _name;
-		public static int Number => _number;
+        Begin,
+        End,
+        Print,
 
-		private static void AddKeyword(string word, Lexems lexem)
-		{
-			_keywords.Add(new Keyword(word, lexem));
-		}
+        If,
+        Then,
+        ElseIf,
+        Else,
+        EndIf,
 
-		private static Lexems GetKeyword(string word)
-		{
-			foreach (Keyword keyword in _keywords)
-				if (keyword.word == word)
-					return keyword.lexem;
+        While,
+        EndWhile,
+        For,
+        To,
+        Do,
+        Repeat,
+        When,
+        EndFor,
 
-			return Lexems.Name;
-		}
+        Not,
+        Or,
+        Xor,
+        And
+    }
 
-		public static void ParseNextLexem()
-		{
-			if (!Reader.IsInitialized)
-			{
-				throw new Exception($"Ошибка! Объект {nameof(Reader)} не был инициализирован!");
-			}
+    public class LexicalAnalyzer
+    {
+        private readonly List<Keyword> _keywords;
+        private Lexems _lexem;
+        private string _name;
+        private int _number;
+        private readonly Reader _reader;
 
-			if (Reader.EOF)
-			{
-				_lexem = Lexems.EOF;
-				return;
-			}
+        public Lexems Lexem => _lexem;
+        public string Name => _name;
+        public int Number => _number;
 
-			while (Reader.Character == ' ')
-			{
-				Reader.ReadNextCharacter();
-			}
+        public LexicalAnalyzer(Reader reader)
+        {
+            _keywords = new List<Keyword>();
+            _lexem = Lexems.None;
+            _name = string.Empty;
+            _number = 0;
+            _reader = reader;
 
-			if (char.IsLetter(Reader.Character))
-			{
-				ParseName();
-			}
-			else if (char.IsDigit(Reader.Character))
-			{
-				ParseNumber();
-			}
-			else if (Reader.Character == '\n')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.Delimiter;
-			}
-			else if (Reader.Character == ',')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.Comma;
-			}
-			else if (Reader.Character == '(')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.LeftBracket;
-			}
-			else if (Reader.Character == ')')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.RightBracket;
-			}
-			else if (Reader.Character == '=')
-			{
-				Reader.ReadNextCharacter();
-				if (Reader.Character == '=')
-				{
-					Reader.ReadNextCharacter();
-					_lexem = Lexems.Equal;
-				}
-				else
-				{
-					_lexem = Lexems.Assign;
-				}
-			}
-			else if (Reader.Character == '!')
-			{
-				Reader.ReadNextCharacter();
-				if (Reader.Character == '=')
-				{
-					Reader.ReadNextCharacter();
-					_lexem = Lexems.NotEqual;
-				}
-				else
-				{
-					throw new Exception("Ошибка! Недопустимый символ!");
-				}
-			}
-			else if (Reader.Character == '<')
-			{
-				Reader.ReadNextCharacter();
-				if (Reader.Character == '=')
-				{
-					Reader.ReadNextCharacter();
-					_lexem = Lexems.LessOrEqual;
-				}
-				else
-				{
-					_lexem = Lexems.Less;
-				}
-			}
-			else if (Reader.Character == '>')
-			{
-				Reader.ReadNextCharacter();
-				if (Reader.Character == '=')
-				{
-					Reader.ReadNextCharacter();
-					_lexem = Lexems.GreaterOrEqual;
-				}
-				else
-				{
-					_lexem = Lexems.Greater;
-				}
-			}
-			else if (Reader.Character == '+')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.Plus;
-			}
-			else if (Reader.Character == '-')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.Minus;
-			}
-			else if (Reader.Character == '*')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.Multiplication;
-			}
-			else if (Reader.Character == '/')
-			{
-				Reader.ReadNextCharacter();
-				_lexem = Lexems.Division;
-			}
-			else
-			{
-				throw new Exception("Ошибка! Недопустимый символ!");
-			}
-		}
+            InitializeKeywords();
+        }
 
-		private static void ParseName()
-		{
-			string name = string.Empty;
+        private void InitializeKeywords()
+        {
+            AddKeyword("int", Lexems.Type);
+            AddKeyword("begin", Lexems.Begin);
+            AddKeyword("end", Lexems.End);
+            AddKeyword("print", Lexems.Print);
+            AddKeyword("if", Lexems.If);
+            AddKeyword("then", Lexems.Then);
+            AddKeyword("elseif", Lexems.ElseIf);
+            AddKeyword("else", Lexems.Else);
+            AddKeyword("endif", Lexems.EndIf);
+            AddKeyword("while", Lexems.While);
+            AddKeyword("endwhile", Lexems.EndWhile);
+            AddKeyword("for", Lexems.For);
+            AddKeyword("to", Lexems.To);
+            AddKeyword("do", Lexems.Do);
+            AddKeyword("repeat", Lexems.Repeat);
+            AddKeyword("when", Lexems.When);
+            AddKeyword("endfor", Lexems.EndFor);
+            AddKeyword("not", Lexems.Not);
+            AddKeyword("or", Lexems.Or);
+            AddKeyword("xor", Lexems.Xor);
+            AddKeyword("and", Lexems.And);
+        }
 
-			while (char.IsLetter(Reader.Character))
-			{
-				name += Reader.Character;
-				Reader.ReadNextCharacter();
-			}
+        private void AddKeyword(string word, Lexems lexem)
+        {
+            _keywords.Add(new Keyword(word, lexem));
+        }
 
-			_name = name;
-			_lexem = GetKeyword(name);
-		}
+        private Lexems GetKeyword(string word)
+        {
+            foreach (Keyword keyword in _keywords)
+                if (keyword.Word == word)
+                    return keyword.Lexem;
 
-		private static void ParseNumber()
-		{
-			string number = string.Empty;
+            return Lexems.Name;
+        }
 
-			while (char.IsDigit(Reader.Character))
-			{
-				number += Reader.Character;
-				Reader.ReadNextCharacter();
-			}
+        public void ParseNextLexem()
+        {
+            if (!_reader.IsInitialized)
+            {
+                throw new Exception($"Ошибка! Объект {nameof(Reader)} не был инициализирован!");
+            }
 
-			if (!int.TryParse(number, out int result))
-			{
-				throw new Exception("Ошибка! Переполнение типа int!");
-			}
+            if (_reader.EOF)
+            {
+                _lexem = Lexems.EOF;
+                return;
+            }
 
-			_number = result;
-			_lexem = Lexems.Number;
-		}
+            while (_reader.Character == ' ')
+            {
+                _reader.ReadNextCharacter();
+            }
 
-	}
+            if (char.IsLetter(_reader.Character))
+            {
+                ParseName();
+            }
+            else if (char.IsDigit(_reader.Character))
+            {
+                ParseNumber();
+            }
+            else if (_reader.Character == '\n')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Delimiter;
+            }
+            else if (_reader.Character == ',')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Comma;
+            }
+            else if (_reader.Character == '(')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.LeftBracket;
+            }
+            else if (_reader.Character == ')')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.RightBracket;
+            }
+            else if (_reader.Character == '=')
+            {
+                _reader.ReadNextCharacter();
+                if (_reader.Character == '=')
+                {
+                    _reader.ReadNextCharacter();
+                    _lexem = Lexems.Equal;
+                }
+                else
+                {
+                    _lexem = Lexems.Assign;
+                }
+            }
+            else if (_reader.Character == '!')
+            {
+                _reader.ReadNextCharacter();
+                if (_reader.Character == '=')
+                {
+                    _reader.ReadNextCharacter();
+                    _lexem = Lexems.NotEqual;
+                }
+                else
+                {
+                    throw new Exception("Ошибка! Недопустимый символ!");
+                }
+            }
+            else if (_reader.Character == '<')
+            {
+                _reader.ReadNextCharacter();
+                if (_reader.Character == '=')
+                {
+                    _reader.ReadNextCharacter();
+                    _lexem = Lexems.LessOrEqual;
+                }
+                else
+                {
+                    _lexem = Lexems.Less;
+                }
+            }
+            else if (_reader.Character == '>')
+            {
+                _reader.ReadNextCharacter();
+                if (_reader.Character == '=')
+                {
+                    _reader.ReadNextCharacter();
+                    _lexem = Lexems.GreaterOrEqual;
+                }
+                else
+                {
+                    _lexem = Lexems.Greater;
+                }
+            }
+            else if (_reader.Character == '+')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Plus;
+            }
+            else if (_reader.Character == '-')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Minus;
+            }
+            else if (_reader.Character == '*')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Multiplication;
+            }
+            else if (_reader.Character == '/')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Division;
+            }
+            else
+            {
+                throw new Exception("Ошибка! Недопустимый символ!");
+            }
+        }
+
+        private void ParseName()
+        {
+            string name = string.Empty;
+
+            while (char.IsLetter(_reader.Character))
+            {
+                name += _reader.Character;
+                _reader.ReadNextCharacter();
+            }
+
+            _name = name;
+            _lexem = GetKeyword(name);
+        }
+
+        private void ParseNumber()
+        {
+            string number = string.Empty;
+
+            while (char.IsDigit(_reader.Character))
+            {
+                number += _reader.Character;
+                _reader.ReadNextCharacter();
+            }
+
+            if (!int.TryParse(number, out int result))
+            {
+                throw new Exception("Ошибка! Переполнение типа int!");
+            }
+
+            _number = result;
+            _lexem = Lexems.Number;
+        }
+    }
 }
