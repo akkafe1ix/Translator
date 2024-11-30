@@ -298,22 +298,43 @@ namespace ClassLibraryTranslator
 
         public void ParseWhileLoop()
         {
-            CheckLexem(Lexems.While);
-            _codeGenerator.AddLabel();
-            string upLabel = _codeGenerator.ReturnCurrentLabel();
-            _codeGenerator.AddLabel();
-            string lowLabel = _codeGenerator.ReturnCurrentLabel();
-            _currentLabel = lowLabel;
+            CheckLexem(Lexems.While);  // Проверка ключевого слова "while"
+
+            _codeGenerator.AddLabel();  // Метка для начала цикла (upLabel)
+            string upLabel = _codeGenerator.ReturnCurrentLabel();  // Получаем метку начала
+            _codeGenerator.AddLabel();  // Метка для конца цикла (lowLabel)
+            string lowLabel = _codeGenerator.ReturnCurrentLabel();  // Получаем метку конца
+            _currentLabel = lowLabel;  // Устанавливаем текущую метку для завершения
 
             _codeGenerator.AddInstruction(upLabel + ":");
-            ParseExpression();
+            // Разбор условия while (a < 14)
+            ParseExpression();  // Используем ParseExpression для разбора условия
 
-            ParseSequenceOfInstructions();
-            CheckLexem(Lexems.EndWhile);
 
-            _codeGenerator.AddInstruction("jmp " + upLabel);
-            _codeGenerator.AddInstruction(lowLabel + ":");
+             _lexicalAnalyzer.ParseNextLexem();
+            // Проверка тела цикла: если это составной оператор в фигурных скобках
+            if (_lexicalAnalyzer.Lexem == Lexems.LeftBracketF)
+            {
+                _lexicalAnalyzer.ParseNextLexem();
+                ParseSequenceOfInstructions();  // Разбор инструкций внутри фигурных скобок
+                CheckLexem(Lexems.RightBracketF);  // Проверка закрывающей фигурной скобки
+
+            }
+            else
+            {
+                // Если оператор простой, разбираем одну инструкцию
+                ParseInstruction();  // Разбор одной инструкции
+            }
+            _lexicalAnalyzer.ParseNextLexem();
+
+            // Завершение цикла (переход к lowLabel)
+            _codeGenerator.AddInstruction("jmp " + upLabel);  // Переход к метке upLabel, чтобы вернуться к проверке условия
+            _codeGenerator.AddInstruction(lowLabel + ":");  // Метка для завершения цикла
+            CheckLexem(Lexems.EndWhile);  // Проверка ключевого слова "endwhile"
+            //_lexicalAnalyzer.ParseNextLexem();
         }
+
+
 
         public void ParseConditionalStatement()
         {

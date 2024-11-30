@@ -1,9 +1,13 @@
-int a, b, c
+bool a, b, c
 
 begin
     a = 7
-    b = 4
-    a=a*a-(7*b)
-    cавп=(a-b)*a+b
-    print c
+    b = 11
+    if (b>10) then
+    print b
+    elseif (b<10) then
+    print b
+    else 
+    print a
+    endif
 end

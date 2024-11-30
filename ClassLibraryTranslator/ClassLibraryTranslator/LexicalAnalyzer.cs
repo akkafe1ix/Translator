@@ -14,6 +14,8 @@ namespace ClassLibraryTranslator
         Assign,
         LeftBracket,
         RightBracket,
+        LeftBracketF,
+        RightBracketF,
 
         Number,
         Name,
@@ -164,6 +166,16 @@ namespace ClassLibraryTranslator
             {
                 _reader.ReadNextCharacter();
                 _lexem = Lexems.RightBracket;
+            }
+            else if (_reader.Character == '{')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.LeftBracketF;
+            }
+            else if (_reader.Character == '}')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.RightBracketF;
             }
             else if (_reader.Character == '=')
             {

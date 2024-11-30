@@ -7,7 +7,7 @@ namespace ConsoleTests
     {
         static void Main(string[] args)
         {
-            string path = "C:\\Users\\Администратор\\Desktop\\Translator\\Test.txt";
+            string path = "C:\\Users\\Администратор\\Desktop\\Translator\\TestWhileEasy.txt";
 
             // Создание экземпляров зависимых классов
             var reader = new Reader();
@@ -18,7 +18,7 @@ namespace ConsoleTests
             var syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, codeGenerator, nameTable, errors, reader);
 
             // Выполнение тестов
-            //Test1(path, reader, lexicalAnalyzer);
+            Test1(path, reader, lexicalAnalyzer);
             //Test2(path, reader, nameTable, lexicalAnalyzer);
             //Test3(path, reader, syntaxAnalyzer, errors, codeGenerator);
 
