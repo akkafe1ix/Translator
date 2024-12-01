@@ -35,7 +35,22 @@ namespace ClassLibraryTranslator
 
         public void ParseDecVar()
         {
-            CheckLexem(Lexems.Type);
+            tType varType = tType.None;
+
+            if (_lexicalAnalyzer.Lexem == Lexems.Int)
+            {
+                CheckLexem(Lexems.Int);
+                varType = tType.Int;
+            }
+            else if ((_lexicalAnalyzer.Lexem == Lexems.Bool))
+            {
+                CheckLexem(Lexems.Bool);
+                varType = tType.Bool;
+            }
+            else
+            {
+                CheckLexem(Lexems.Type);
+            }
             if (_lexicalAnalyzer.Lexem != Lexems.Name)
             {
                 _errors.AddError(
@@ -43,7 +58,7 @@ namespace ClassLibraryTranslator
             }
             else
             {
-                var x = _nameTable.AddIdentifier(_lexicalAnalyzer.Name, tCat.Var, tType.Int);
+                var x = _nameTable.AddIdentifier(_lexicalAnalyzer.Name, tCat.Var, varType);
                 if (x == null)
                 {
                     _errors.AddError(
@@ -63,7 +78,7 @@ namespace ClassLibraryTranslator
                 }
                 else
                 {
-                    var x = _nameTable.AddIdentifier(_lexicalAnalyzer.Name, tCat.Var, tType.Int);
+                    var x = _nameTable.AddIdentifier(_lexicalAnalyzer.Name, tCat.Var, varType);
                     if (x == null)
                     {
                         _errors.AddError(
@@ -75,7 +90,9 @@ namespace ClassLibraryTranslator
             }
 
             CheckLexem(Lexems.Delimiter);
-            _lexicalAnalyzer.ParseNextLexem();
+
+            if (_lexicalAnalyzer.Lexem == Lexems.Bool || _lexicalAnalyzer.Lexem == Lexems.Int)
+                ParseDecVar();
         }
 
         public void ParseSequenceOfInstructions()
@@ -213,6 +230,20 @@ namespace ClassLibraryTranslator
                 _codeGenerator.AddInstruction("push ax");
                 _lexicalAnalyzer.ParseNextLexem();
                 return tType.Int;
+            }
+            else if (_lexicalAnalyzer.Lexem == Lexems.True)
+            {
+                _codeGenerator.AddInstruction("mov ax, 1");
+                _codeGenerator.AddInstruction("push ax");
+                _lexicalAnalyzer.ParseNextLexem();
+                return tType.Bool;
+            }
+            else if (_lexicalAnalyzer.Lexem == Lexems.False)
+            {
+                _codeGenerator.AddInstruction("mov ax, 0");
+                _codeGenerator.AddInstruction("push ax");
+                _lexicalAnalyzer.ParseNextLexem();
+                return tType.Bool;
             }
             else if (_lexicalAnalyzer.Lexem == Lexems.LeftBracket)
             {

@@ -1,13 +1,10 @@
-bool a, b, c
-
+int a, b, c
+bool g, t
 begin
+g=true
     a = 7
-    b = 11
-    if (b>10) then
-    print b
-    elseif (b<10) then
-    print b
-    else 
-    print a
-    endif
+    b = 4
+    a=a*a-(7*b)
+    c=(a-b)*a+b
+    print t
 end

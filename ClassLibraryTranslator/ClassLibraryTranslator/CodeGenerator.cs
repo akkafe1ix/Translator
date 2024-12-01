@@ -96,7 +96,14 @@ namespace ClassLibraryTranslator
         {
             foreach (Identifier identifier in _nameTable.GetListIdentifiers())
             {
-                AddInstruction(identifier.name + "  dw    0");
+                if (identifier.type == tType.Bool)
+                {
+                    AddInstruction(identifier.name + "  db    0");
+                }
+                else
+                {
+                    AddInstruction(identifier.name + "  dw    0");
+                }
             }
         }
 

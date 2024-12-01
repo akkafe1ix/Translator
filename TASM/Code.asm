@@ -2,9 +2,8 @@ data segment
 a  dw    0
 b  dw    0
 c  dw    0
-temp  dw    0
-othertemp  dw    0
-newtemp  dw    0
+g  db    0
+t  db    0
 PRINT_BUF DB ' ' DUP(10)
 BUFEND    DB '$'
 data ends
@@ -16,33 +15,64 @@ assume cs:code,ds:data,ss:stk
 main proc
 mov ax,data
 mov ds,ax
+mov ax, 1
+push ax
+pop ax
+mov g, ax
 mov ax, 7
 push ax
 pop ax
 mov a, ax
-label1:
-mov ax, a
-push ax
-mov ax, 14
+mov ax, 4
 push ax
 pop ax
-pop bx
-cmp bx, ax
-jge label2
+mov b, ax
 mov ax, a
 push ax
-mov ax, 1
+mov ax, a
+push ax
+pop bx
+pop ax
+mul bx
+push ax
+mov ax, 7
+push ax
+mov ax, b
+push ax
+pop bx
+pop ax
+mul bx
+push ax
+pop bx
+pop ax
+sub ax, bx
+push ax
+pop ax
+mov a, ax
+mov ax, a
+push ax
+mov ax, b
+push ax
+pop bx
+pop ax
+sub ax, bx
+push ax
+mov ax, a
+push ax
+pop bx
+pop ax
+mul bx
+push ax
+mov ax, b
 push ax
 pop bx
 pop ax
 add ax, bx
 push ax
 pop ax
-mov a, ax
-jmp label1
-label2:
+mov c, ax
 push ax
-mov ax, a
+mov ax, t
 CALL PRINT
 pop ax
 mov ax,4c00h

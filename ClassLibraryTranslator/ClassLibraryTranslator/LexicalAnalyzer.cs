@@ -21,6 +21,7 @@ namespace ClassLibraryTranslator
         Name,
         Type,
         Int,
+        Bool,
 
         Less,
         LessOrEqual,
@@ -56,7 +57,9 @@ namespace ClassLibraryTranslator
         Not,
         Or,
         Xor,
-        And
+        And,
+        True,
+        False
     }
 
     public class LexicalAnalyzer
@@ -84,7 +87,8 @@ namespace ClassLibraryTranslator
 
         private void InitializeKeywords()
         {
-            AddKeyword("int", Lexems.Type);
+            AddKeyword("int", Lexems.Int);
+            AddKeyword("bool", Lexems.Bool);
             AddKeyword("begin", Lexems.Begin);
             AddKeyword("end", Lexems.End);
             AddKeyword("print", Lexems.Print);
@@ -105,6 +109,9 @@ namespace ClassLibraryTranslator
             AddKeyword("or", Lexems.Or);
             AddKeyword("xor", Lexems.Xor);
             AddKeyword("and", Lexems.And);
+            AddKeyword("true", Lexems.True);
+            AddKeyword("false", Lexems.False);
+
         }
 
         private void AddKeyword(string word, Lexems lexem)
@@ -248,6 +255,32 @@ namespace ClassLibraryTranslator
             {
                 _reader.ReadNextCharacter();
                 _lexem = Lexems.Division;
+            }
+            else if (_reader.Character == '&')
+            {
+                _reader.ReadNextCharacter();
+                if (_reader.Character == '&')
+                {
+                    _reader.ReadNextCharacter();
+                    _lexem = Lexems.And;
+                }
+                else
+                {
+                    throw new Exception("Invalid symbol '&'");
+                }
+            }
+            else if (_reader.Character == '|')
+            {
+                _reader.ReadNextCharacter();
+                if (_reader.Character == '|')
+                {
+                    _reader.ReadNextCharacter();
+                    _lexem = Lexems.Or;
+                }
+                else
+                {
+                    throw new Exception("Invalid symbol '|'");
+                }
             }
             else
             {
