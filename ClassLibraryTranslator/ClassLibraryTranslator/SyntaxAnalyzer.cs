@@ -165,41 +165,79 @@ namespace ClassLibraryTranslator
                 _lexicalAnalyzer.Lexem == Lexems.GreaterOrEqual)
             {
                 string transition = "";
-                switch (_lexicalAnalyzer.Lexem)
+                var oper = _lexicalAnalyzer.Lexem;
+                if (t == tType.Bool)
                 {
-                    case Lexems.Equal:
-                        transition = "jne";
-                        break;
-                    case Lexems.NotEqual:
-                        transition = "je";
-                        break;
-                    case Lexems.Greater:
-                        transition = "jle";
-                        break;
-                    case Lexems.GreaterOrEqual:
-                        transition = "jl";
-                        break;
-                    case Lexems.Less:
-                        transition = "jge";
-                        break;
-                    case Lexems.LessOrEqual:
-                        transition = "jg";
-                        break;
-                }
+                    if (oper == Lexems.Equal || oper == Lexems.NotEqual)
+                    {
+                        _lexicalAnalyzer.ParseNextLexem();
+                        var type = _lexicalAnalyzer.Lexem;
+                        if ((type == Lexems.False || type == Lexems.True))
+                        {
+                            _codeGenerator.AddInstruction("pop ax"); // Правый операнд
+                                                                     //_codeGenerator.AddInstruction("pop bx"); // Левый операнд
+                            if (type == Lexems.True)
+                            {
+                                _codeGenerator.AddInstruction("cmp ax, 1");
+                            }
+                            else
+                            {
+                                _codeGenerator.AddInstruction("cmp ax, 0");
+                            }
+                            if (oper == Lexems.Equal)
+                            {
+                                _codeGenerator.AddInstruction($"jne {_currentLabel}");
+                                _currentLabel = "";
+                            }
+                            else
+                            {
+                                _codeGenerator.AddInstruction($"je {_currentLabel}");
+                                _currentLabel = "";
+                            }
+                            _lexicalAnalyzer.ParseNextLexem();
 
-                _lexicalAnalyzer.ParseNextLexem();
-                tType t2 = ParseAdditionOrSubtraction();
-                if (t != t2 || t != tType.Int)
+                        }
+                    }
+
+                }
+                else
                 {
-                    _errors.AddError("Несовместимые типы для операции сравнения.");
-                }
+                    switch (_lexicalAnalyzer.Lexem)
+                    {
+                        case Lexems.Equal:
+                            transition = "jne";
+                            break;
+                        case Lexems.NotEqual:
+                            transition = "je";
+                            break;
+                        case Lexems.Greater:
+                            transition = "jle";
+                            break;
+                        case Lexems.GreaterOrEqual:
+                            transition = "jl";
+                            break;
+                        case Lexems.Less:
+                            transition = "jge";
+                            break;
+                        case Lexems.LessOrEqual:
+                            transition = "jg";
+                            break;
+                    }
 
-                _codeGenerator.AddInstruction("pop ax");
-                _codeGenerator.AddInstruction("pop bx");
-                _codeGenerator.AddInstruction("cmp bx, ax");
-                _codeGenerator.AddInstruction(transition + " " + _currentLabel);
-                _currentLabel = "";
-                t = tType.Bool;
+                    _lexicalAnalyzer.ParseNextLexem();
+                    tType t2 = ParseAdditionOrSubtraction();
+                    if (t != t2)
+                    {
+                        _errors.AddError("Несовместимые типы для операции сравнения.");
+                    }
+
+                    _codeGenerator.AddInstruction("pop ax");
+                    _codeGenerator.AddInstruction("pop bx");
+                    _codeGenerator.AddInstruction("cmp bx, ax");
+                    _codeGenerator.AddInstruction(transition + " " + _currentLabel);
+                    _currentLabel = "";     
+                }
+                 t = tType.Bool;
             }
 
             return t;

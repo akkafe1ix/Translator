@@ -1,10 +1,15 @@
 int a, b, c
-bool g, t
+bool g
 begin
+g=false
+a=0
+while (g==true)
+{
+if(a==10) then
 g=true
-    a = 7
-    b = 4
-    a=a*a-(7*b)
-    c=(a-b)*a+b
-    print t
+endif
+a=a+1
+print a
+}
+endwhile
 end

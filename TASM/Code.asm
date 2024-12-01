@@ -3,7 +3,6 @@ a  dw    0
 b  dw    0
 c  dw    0
 g  db    0
-t  db    0
 PRINT_BUF DB ' ' DUP(10)
 BUFEND    DB '$'
 data ends
@@ -15,66 +14,51 @@ assume cs:code,ds:data,ss:stk
 main proc
 mov ax,data
 mov ds,ax
+mov ax, 0
+push ax
+pop ax
+mov g, ax
+mov ax, 0
+push ax
+pop ax
+mov a, ax
+label1:
+mov ax, g
+push ax
+pop ax
+cmp ax, 1
+jne label2
+mov ax, a
+push ax
+mov ax, 10
+push ax
+pop ax
+pop bx
+cmp bx, ax
+jne label3
 mov ax, 1
 push ax
 pop ax
 mov g, ax
-mov ax, 7
-push ax
-pop ax
-mov a, ax
-mov ax, 4
-push ax
-pop ax
-mov b, ax
+jmp label4
+label3:
+label4:
 mov ax, a
 push ax
-mov ax, a
-push ax
-pop bx
-pop ax
-mul bx
-push ax
-mov ax, 7
-push ax
-mov ax, b
-push ax
-pop bx
-pop ax
-mul bx
-push ax
-pop bx
-pop ax
-sub ax, bx
-push ax
-pop ax
-mov a, ax
-mov ax, a
-push ax
-mov ax, b
-push ax
-pop bx
-pop ax
-sub ax, bx
-push ax
-mov ax, a
-push ax
-pop bx
-pop ax
-mul bx
-push ax
-mov ax, b
+mov ax, 1
 push ax
 pop bx
 pop ax
 add ax, bx
 push ax
 pop ax
-mov c, ax
+mov a, ax
 push ax
-mov ax, t
+mov ax, a
 CALL PRINT
 pop ax
+jmp label1
+label2:
 mov ax,4c00h
 int 21h
 main endp

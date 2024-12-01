@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 5.00                  12/1/24 17:30:56
+Microsoft (R) Macro Assembler Version 5.00                  12/1/24 19:43:56
                                                              Page     1-1
 
 
@@ -7,113 +7,98 @@
        3 0002  0000			b  dw    0 
        4 0004  0000			c  dw    0 
        5 0006  00			g  db    0 
-       6 0007  00			t  db    0 
-       7 0008  0020[			PRINT_BUF DB ' ' DUP(10) 
-       8	   0A			
-       9			 ]	
-      10				
-      11 0028  24			BUFEND    DB '$' 
-      12 0029				data ends 
-      13 0000				stk segment stack 
-      14 0000  0100[			db 256 dup ("?") 
-      15	   3F			
-      16			 ]	
-      17				
-      18 0100				stk ends 
-      19 0000				code segment 
-      20				assume cs:code,ds:data,ss:stk 
-      21 0000				main proc 
-      22 0000  B8 ---- R		mov ax,data 
-      23 0003  8E D8			mov ds,ax 
-      24 0005  B8 0001			mov ax, 1 
-      25 0008  50			push ax 
-      26 0009  58			pop ax 
-      27 000A  A3 0006 R		mov g, ax 
-Code.asm(21): warning A4031: Operand types must match
-      28 000D  B8 0007			mov ax, 7 
-      29 0010  50			push ax 
-      30 0011  58			pop ax 
-      31 0012  A3 0000 R		mov a, ax 
-      32 0015  B8 0004			mov ax, 4 
+       6 0007  0020[			PRINT_BUF DB ' ' DUP(10) 
+       7	   0A			
+       8			 ]	
+       9				
+      10 0027  24			BUFEND    DB '$' 
+      11 0028				data ends 
+      12 0000				stk segment stack 
+      13 0000  0100[			db 256 dup ("?") 
+      14	   3F			
+      15			 ]	
+      16				
+      17 0100				stk ends 
+      18 0000				code segment 
+      19				assume cs:code,ds:data,ss:stk 
+      20 0000				main proc 
+      21 0000  B8 ---- R		mov ax,data 
+      22 0003  8E D8			mov ds,ax 
+      23 0005  B8 0000			mov ax, 0 
+      24 0008  50			push ax 
+      25 0009  58			pop ax 
+      26 000A  A3 0006 R		mov g, ax 
+Code.asm(20): warning A4031: Operand types must match
+      27 000D  B8 0000			mov ax, 0 
+      28 0010  50			push ax 
+      29 0011  58			pop ax 
+      30 0012  A3 0000 R		mov a, ax 
+      31 0015				label1: 
+      32 0015  A1 0006 R		mov ax, g 
+Code.asm(26): warning A4031: Operand types must match
       33 0018  50			push ax 
       34 0019  58			pop ax 
-      35 001A  A3 0002 R		mov b, ax 
-      36 001D  A1 0000 R		mov ax, a 
-      37 0020  50			push ax 
-      38 0021  A1 0000 R		mov ax, a 
-      39 0024  50			push ax 
-      40 0025  5B			pop bx 
-      41 0026  58			pop ax 
-      42 0027  F7 E3			mul bx 
-      43 0029  50			push ax 
-      44 002A  B8 0007			mov ax, 7 
-      45 002D  50			push ax 
-      46 002E  A1 0002 R		mov ax, b 
-      47 0031  50			push ax 
-      48 0032  5B			pop bx 
-      49 0033  58			pop ax 
-      50 0034  F7 E3			mul bx 
-      51 0036  50			push ax 
-      52 0037  5B			pop bx 
-      53 0038  58			pop ax 
-Microsoft (R) Macro Assembler Version 5.00                  12/1/24 17:30:56
+      35 001A  3D 0001			cmp ax, 1 
+      36 001D  75 34			jne label2 
+      37 001F  A1 0000 R		mov ax, a 
+      38 0022  50			push ax 
+      39 0023  B8 000A			mov ax, 10 
+      40 0026  50			push ax 
+      41 0027  58			pop ax 
+      42 0028  5B			pop bx 
+      43 0029  3B D8			cmp bx, ax 
+      44 002B  75 0B			jne label3 
+      45 002D  B8 0001			mov ax, 1 
+      46 0030  50			push ax 
+      47 0031  58			pop ax 
+      48 0032  A3 0006 R		mov g, ax 
+Code.asm(42): warning A4031: Operand types must match
+      49 0035  EB 01 90			jmp label4 
+      50 0038				label3: 
+      51 0038				label4: 
+Microsoft (R) Macro Assembler Version 5.00                  12/1/24 19:43:56
                                                              Page     1-2
 
 
-      54 0039  2B C3			sub ax, bx 
-      55 003B  50			push ax 
-      56 003C  58			pop ax 
-      57 003D  A3 0000 R		mov a, ax 
-      58 0040  A1 0000 R		mov ax, a 
-      59 0043  50			push ax 
-      60 0044  A1 0002 R		mov ax, b 
-      61 0047  50			push ax 
-      62 0048  5B			pop bx 
-      63 0049  58			pop ax 
-      64 004A  2B C3			sub ax, bx 
-      65 004C  50			push ax 
-      66 004D  A1 0000 R		mov ax, a 
-      67 0050  50			push ax 
-      68 0051  5B			pop bx 
-      69 0052  58			pop ax 
-      70 0053  F7 E3			mul bx 
-      71 0055  50			push ax 
-      72 0056  A1 0002 R		mov ax, b 
-      73 0059  50			push ax 
-      74 005A  5B			pop bx 
-      75 005B  58			pop ax 
-      76 005C  03 C3			add ax, bx 
-      77 005E  50			push ax 
-      78 005F  58			pop ax 
-      79 0060  A3 0004 R		mov c, ax 
-      80 0063  50			push ax 
-      81 0064  A1 0007 R		mov ax, t 
-Code.asm(75): warning A4031: Operand types must match
-      82 0067  E8 0070 R		CALL PRINT 
-      83 006A  58			pop ax 
-      84 006B  B8 4C00			mov ax,4c00h 
-      85 006E  CD 21			int 21h 
-      86 0070				main endp 
-      87 0070				PRINT PROC NEAR 
-      88 0070  B9 000A			MOV   CX, 10 
-      89 0073  BF 0020			MOV   DI, BUFEND - PRINT_BUF 
-      90 0076				PRINT_LOOP: 
-      91 0076  BA 0000			MOV   DX, 0 
-      92 0079  F7 F1			DIV   CX 
-      93 007B  80 C2 30			ADD   DL, '0' 
-      94 007E  88 95 0007 R		MOV   [PRINT_BUF + DI - 1], DL 
-      95 0082  4F			DEC   DI 
-      96 0083  3C 00			CMP   AL, 0 
-      97 0085  75 EF			JNE   PRINT_LOOP 
-      98 0087  8D 16 0008 R		LEA   DX, PRINT_BUF 
-      99 008B  03 D7			ADD   DX, DI 
-     100 008D  B4 09			MOV   AH, 09H 
-     101 008F  CD 21			INT   21H 
-     102 0091  C3			RET 
-     103 0092				PRINT ENDP 
-     104 0092				code ends 
-     105				end main 
-Microsoft (R) Macro Assembler Version 5.00                  12/1/24 17:30:56
+      52 0038  A1 0000 R		mov ax, a 
+      53 003B  50			push ax 
+      54 003C  B8 0001			mov ax, 1 
+      55 003F  50			push ax 
+      56 0040  5B			pop bx 
+      57 0041  58			pop ax 
+      58 0042  03 C3			add ax, bx 
+      59 0044  50			push ax 
+      60 0045  58			pop ax 
+      61 0046  A3 0000 R		mov a, ax 
+      62 0049  50			push ax 
+      63 004A  A1 0000 R		mov ax, a 
+      64 004D  E8 0058 R		CALL PRINT 
+      65 0050  58			pop ax 
+      66 0051  EB C2			jmp label1 
+      67 0053				label2: 
+      68 0053  B8 4C00			mov ax,4c00h 
+      69 0056  CD 21			int 21h 
+      70 0058				main endp 
+      71 0058				PRINT PROC NEAR 
+      72 0058  B9 000A			MOV   CX, 10 
+      73 005B  BF 0020			MOV   DI, BUFEND - PRINT_BUF 
+      74 005E				PRINT_LOOP: 
+      75 005E  BA 0000			MOV   DX, 0 
+      76 0061  F7 F1			DIV   CX 
+      77 0063  80 C2 30			ADD   DL, '0' 
+      78 0066  88 95 0006 R		MOV   [PRINT_BUF + DI - 1], DL 
+      79 006A  4F			DEC   DI 
+      80 006B  3C 00			CMP   AL, 0 
+      81 006D  75 EF			JNE   PRINT_LOOP 
+      82 006F  8D 16 0007 R		LEA   DX, PRINT_BUF 
+      83 0073  03 D7			ADD   DX, DI 
+      84 0075  B4 09			MOV   AH, 09H 
+      85 0077  CD 21			INT   21H 
+      86 0079  C3			RET 
+      87 007A				PRINT ENDP 
+      88 007A				code ends 
+      89				end main 
+Microsoft (R) Macro Assembler Version 5.00                  12/1/24 19:43:56
                                                              Symbols-1
 
 
@@ -121,8 +106,8 @@ Segments and Groups:
 
                 N a m e         	Length	 Align	Combine Class
 
-CODE . . . . . . . . . . . . . .  	0092	PARA	NONE	
-DATA . . . . . . . . . . . . . .  	0029	PARA	NONE	
+CODE . . . . . . . . . . . . . .  	007A	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0028	PARA	NONE	
 STK  . . . . . . . . . . . . . .  	0100	PARA	STACK	
 
 Symbols:            
@@ -132,28 +117,31 @@ Symbols:
 A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
 
 B  . . . . . . . . . . . . . . .  	L WORD	0002	DATA
-BUFEND . . . . . . . . . . . . .  	L BYTE	0028	DATA
+BUFEND . . . . . . . . . . . . .  	L BYTE	0027	DATA
 
 C  . . . . . . . . . . . . . . .  	L WORD	0004	DATA
 
 G  . . . . . . . . . . . . . . .  	L BYTE	0006	DATA
 
-MAIN . . . . . . . . . . . . . .  	N PROC	0000	CODE	Length = 0070
+LABEL1 . . . . . . . . . . . . .  	L NEAR	0015	CODE
+LABEL2 . . . . . . . . . . . . .  	L NEAR	0053	CODE
+LABEL3 . . . . . . . . . . . . .  	L NEAR	0038	CODE
+LABEL4 . . . . . . . . . . . . .  	L NEAR	0038	CODE
 
-PRINT  . . . . . . . . . . . . .  	N PROC	0070	CODE	Length = 0022
-PRINT_BUF  . . . . . . . . . . .  	L BYTE	0008	DATA	Length = 0020
-PRINT_LOOP . . . . . . . . . . .  	L NEAR	0076	CODE
+MAIN . . . . . . . . . . . . . .  	N PROC	0000	CODE	Length = 0058
 
-T  . . . . . . . . . . . . . . .  	L BYTE	0007	DATA
+PRINT  . . . . . . . . . . . . .  	N PROC	0058	CODE	Length = 0022
+PRINT_BUF  . . . . . . . . . . .  	L BYTE	0007	DATA	Length = 0020
+PRINT_LOOP . . . . . . . . . . .  	L NEAR	005E	CODE
 
 @FILENAME  . . . . . . . . . . .  	TEXT  Code		
 
 
-     99 Source  Lines
-     99 Total   Lines
-     15 Symbols
+     83 Source  Lines
+     83 Total   Lines
+     18 Symbols
 
   50560 + 465984 Bytes symbol space free
 
-      2 Warning Errors
+      3 Warning Errors
       0 Severe  Errors
