@@ -1,0 +1,13 @@
+int a, b, c
+bool g,z,d
+begin
+a=1
+b=0
+g=true
+z=false
+ if (g and z) then
+   print a
+    else
+    print b
+endif
+end

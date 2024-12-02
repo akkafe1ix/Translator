@@ -1,15 +1,11 @@
 int a, b, c
-bool g
+bool g,z,l
 begin
-g=false
-a=0
-while (g==true)
-{
-if(a==10) then
+a=1
+b=0
 g=true
-endif
-a=a+1
-print a
-}
-endwhile
+z=false
+l=g xor z
+print l
+
 end

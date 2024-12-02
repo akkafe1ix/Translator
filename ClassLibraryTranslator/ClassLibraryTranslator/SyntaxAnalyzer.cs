@@ -142,7 +142,7 @@ namespace ClassLibraryTranslator
             if (_lexicalAnalyzer.Lexem == Lexems.Assign)
             {
                 _lexicalAnalyzer.ParseNextLexem();
-                tType t = ParseExpression();
+                tType t = ParseExpressionLogic();
                 if (varType != t)
                 {
                     _errors.AddError($"Несовместимые типы при присваивании.");
@@ -153,6 +153,9 @@ namespace ClassLibraryTranslator
                 _errors.AddError($"Не удалось распарсить инструкцию присваивания. (Строка {_reader.LineNumber}, позиция {_reader.PositionInLine}, символ '{_reader.Character}')");
             }
         }
+
+
+
 
         public tType ParseExpression()
         {
@@ -286,7 +289,7 @@ namespace ClassLibraryTranslator
             else if (_lexicalAnalyzer.Lexem == Lexems.LeftBracket)
             {
                 _lexicalAnalyzer.ParseNextLexem();
-                t = ParseExpression();
+                t = ParseExpressionLogic();
                 CheckLexem(Lexems.RightBracket);
             }
             else
@@ -377,7 +380,7 @@ namespace ClassLibraryTranslator
 
             _codeGenerator.AddInstruction(upLabel + ":");
             // Разбор условия while (a < 14)
-            ParseExpression();  // Используем ParseExpression для разбора условия
+            ParseExpressionLogic();  // Используем ParseExpression для разбора условия
 
 
              _lexicalAnalyzer.ParseNextLexem();
@@ -414,7 +417,7 @@ namespace ClassLibraryTranslator
             _codeGenerator.AddLabel();
             string exitLabel = _codeGenerator.ReturnCurrentLabel();
 
-            ParseExpression();
+            ParseExpressionLogic();
             CheckLexem(Lexems.Then);
             ParseSequenceOfInstructions();
             _codeGenerator.AddInstruction("jmp " + exitLabel);
@@ -427,7 +430,7 @@ namespace ClassLibraryTranslator
                 _currentLabel = lowLabel;
 
                 _lexicalAnalyzer.ParseNextLexem();
-                ParseExpression();
+                ParseExpressionLogic();
                 CheckLexem(Lexems.Then);
                 ParseSequenceOfInstructions();
                 _codeGenerator.AddInstruction("jmp " + exitLabel);
@@ -474,6 +477,102 @@ namespace ClassLibraryTranslator
                     $"Не удалось распарсить выражение вывода. (Строка {_reader.LineNumber}, позиция {_reader.PositionInLine}, символ '{_reader.Character}')");
             }
         }
+        private tType ParseExpressionLogic()
+        {
+            return ParseLogicalOr();
+        }
+
+
+        private tType ParseLogicalOr()
+        {
+            tType type = ParseLogicalAnd();
+
+            while (_lexicalAnalyzer.Lexem == Lexems.Or)
+            {
+                // Генерация новой метки для перехода
+                _codeGenerator.AddLabel();
+                string exitLabel = _codeGenerator.ReturnCurrentLabel();
+
+                _lexicalAnalyzer.ParseNextLexem();
+                tType rightType = ParseLogicalAnd();
+                if (type != rightType || type != tType.Bool)
+                {
+                    _errors.AddError("Несовместимые типы для логической операции ИЛИ.");
+                }
+
+                // Генерация кода для операции OR
+                _codeGenerator.AddInstruction("pop ax"); // Правый операнд
+                _codeGenerator.AddInstruction("pop bx"); // Левый операнд
+                _codeGenerator.AddInstruction("or ax, bx");
+                _codeGenerator.AddInstruction("push ax");
+                _codeGenerator.AddInstruction("cmp ax, 0");
+                _codeGenerator.AddInstruction($"jnz {exitLabel}"); // Если результат не ноль, пропускаем jump
+                _codeGenerator.AddInstruction($"jmp {_currentLabel}"); // Если результат ноль, переходим на метку условия
+                _codeGenerator.AddInstruction(exitLabel + ":");
+
+                type = tType.Bool;
+            }
+
+            while (_lexicalAnalyzer.Lexem == Lexems.Xor)
+            {
+                // Генерация новой метки для перехода
+                _codeGenerator.AddLabel();
+                string exitLabel = _codeGenerator.ReturnCurrentLabel();
+
+                _lexicalAnalyzer.ParseNextLexem();
+                tType rightType = ParseLogicalAnd();
+                if (type != rightType || type != tType.Bool)
+                {
+                    _errors.AddError("Несовместимые типы для логической операции XOR.");
+                }
+
+                // Генерация кода для операции XOR
+                _codeGenerator.AddInstruction("pop ax"); // Правый операнд
+                _codeGenerator.AddInstruction("pop bx"); // Левый операнд
+                _codeGenerator.AddInstruction("xor ax, bx");
+                _codeGenerator.AddInstruction("push ax");
+                _codeGenerator.AddInstruction("cmp ax, 1");
+                _codeGenerator.AddInstruction($"jnz {_currentLabel}"); // Если результат не ноль, пропускаем jump
+                _codeGenerator.AddInstruction($"jmp {exitLabel}"); // Если результат ноль, переходим на метку условия
+                _codeGenerator.AddInstruction(exitLabel + ":");
+
+                type = tType.Bool;
+            }
+
+            return type;
+        }
+
+        private tType ParseLogicalAnd()
+        {
+            tType type = ParseExpression();
+
+            while (_lexicalAnalyzer.Lexem == Lexems.And)
+            {
+                _lexicalAnalyzer.ParseNextLexem();
+
+                // Сохраняем текущую метку, так как ParseComparison может её изменить
+                string savedLabel = _currentLabel;
+
+                tType rightType = ParseExpression();
+                if (type != rightType || type != tType.Bool)
+                {
+                    _errors.AddError("Несовместимые типы для логической операции И.");
+                }
+
+                // Генерация кода для операции AND
+                _codeGenerator.AddInstruction("pop ax"); // Правый операнд
+                _codeGenerator.AddInstruction("pop bx"); // Левый операнд
+                _codeGenerator.AddInstruction("and ax, bx");
+                _codeGenerator.AddInstruction("push ax");
+                _codeGenerator.AddInstruction("cmp ax, 0");
+                _codeGenerator.AddInstruction($"jz {savedLabel}"); // Если результат ноль, переходим на метку условия
+
+                type = tType.Bool;
+            }
+            return type;
+        }
+
+
         public void Compile()
         {
             _lexicalAnalyzer.ParseNextLexem();

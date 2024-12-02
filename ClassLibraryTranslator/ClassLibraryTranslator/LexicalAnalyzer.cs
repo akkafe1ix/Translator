@@ -282,6 +282,11 @@ namespace ClassLibraryTranslator
                     throw new Exception("Invalid symbol '|'");
                 }
             }
+            else if (_reader.Character == '^')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Xor;
+            }
             else
             {
                 throw new Exception("Ошибка! Недопустимый символ!");

@@ -3,6 +3,8 @@ a  dw    0
 b  dw    0
 c  dw    0
 g  db    0
+z  db    0
+l  db    0
 PRINT_BUF DB ' ' DUP(10)
 BUFEND    DB '$'
 data ends
@@ -14,51 +16,40 @@ assume cs:code,ds:data,ss:stk
 main proc
 mov ax,data
 mov ds,ax
+mov ax, 1
+push ax
+pop ax
+mov a, ax
 mov ax, 0
+push ax
+pop ax
+mov b, ax
+mov ax, 1
 push ax
 pop ax
 mov g, ax
 mov ax, 0
 push ax
 pop ax
-mov a, ax
-label1:
+mov z, ax
 mov ax, g
 push ax
+mov ax, z
+push ax
 pop ax
+pop bx
+xor ax, bx
+push ax
 cmp ax, 1
-jne label2
-mov ax, a
-push ax
-mov ax, 10
-push ax
+jnz 
+jmp label1
+label1:
 pop ax
-pop bx
-cmp bx, ax
-jne label3
-mov ax, 1
+mov l, ax
 push ax
-pop ax
-mov g, ax
-jmp label4
-label3:
-label4:
-mov ax, a
-push ax
-mov ax, 1
-push ax
-pop bx
-pop ax
-add ax, bx
-push ax
-pop ax
-mov a, ax
-push ax
-mov ax, a
+mov ax, l
 CALL PRINT
 pop ax
-jmp label1
-label2:
 mov ax,4c00h
 int 21h
 main endp
