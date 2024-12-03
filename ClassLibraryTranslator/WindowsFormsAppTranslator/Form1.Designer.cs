@@ -35,6 +35,8 @@ namespace WindowsFormsAppTranslator
             this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.компиляцияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выполнитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.кодToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.выполнитьКодToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
@@ -42,8 +44,6 @@ namespace WindowsFormsAppTranslator
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.кодToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.выполнитьКодToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -60,8 +60,8 @@ namespace WindowsFormsAppTranslator
             this.кодToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(658, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(877, 30);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -71,20 +71,20 @@ namespace WindowsFormsAppTranslator
             this.открытьToolStripMenuItem,
             this.сохранитьToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // открытьToolStripMenuItem
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
             this.открытьToolStripMenuItem.Text = "Открыть";
             this.открытьToolStripMenuItem.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
             // 
             // сохранитьToolStripMenuItem
             // 
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
             // 
@@ -93,25 +93,41 @@ namespace WindowsFormsAppTranslator
             this.компиляцияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.выполнитьToolStripMenuItem});
             this.компиляцияToolStripMenuItem.Name = "компиляцияToolStripMenuItem";
-            this.компиляцияToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
+            this.компиляцияToolStripMenuItem.Size = new System.Drawing.Size(112, 26);
             this.компиляцияToolStripMenuItem.Text = "Компиляция";
             // 
             // выполнитьToolStripMenuItem
             // 
             this.выполнитьToolStripMenuItem.Name = "выполнитьToolStripMenuItem";
-            this.выполнитьToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.выполнитьToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
             this.выполнитьToolStripMenuItem.Text = "Выполнить компиляцию";
             this.выполнитьToolStripMenuItem.Click += new System.EventHandler(this.выполнитьToolStripMenuItem_Click);
+            // 
+            // кодToolStripMenuItem
+            // 
+            this.кодToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.выполнитьКодToolStripMenuItem});
+            this.кодToolStripMenuItem.Name = "кодToolStripMenuItem";
+            this.кодToolStripMenuItem.Size = new System.Drawing.Size(49, 26);
+            this.кодToolStripMenuItem.Text = "Код";
+            // 
+            // выполнитьКодToolStripMenuItem
+            // 
+            this.выполнитьКодToolStripMenuItem.Name = "выполнитьКодToolStripMenuItem";
+            this.выполнитьКодToolStripMenuItem.Size = new System.Drawing.Size(198, 26);
+            this.выполнитьКодToolStripMenuItem.Text = "Выполнить код";
+            this.выполнитьКодToolStripMenuItem.Click += new System.EventHandler(this.выполнитьКодToolStripMenuItem_Click);
             // 
             // richTextBox3
             // 
             this.richTextBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox3.Location = new System.Drawing.Point(9, 290);
-            this.richTextBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.richTextBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.richTextBox3.Location = new System.Drawing.Point(12, 357);
+            this.richTextBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.richTextBox3.Name = "richTextBox3";
             this.richTextBox3.ReadOnly = true;
-            this.richTextBox3.Size = new System.Drawing.Size(642, 147);
+            this.richTextBox3.Size = new System.Drawing.Size(855, 180);
             this.richTextBox3.TabIndex = 3;
             this.richTextBox3.Text = "";
             // 
@@ -120,10 +136,11 @@ namespace WindowsFormsAppTranslator
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(4, 28);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.richTextBox1.Location = new System.Drawing.Point(5, 34);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(314, 211);
+            this.richTextBox1.Size = new System.Drawing.Size(416, 259);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 
@@ -132,11 +149,12 @@ namespace WindowsFormsAppTranslator
             this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox2.Location = new System.Drawing.Point(4, 28);
-            this.richTextBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.richTextBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.richTextBox2.Location = new System.Drawing.Point(5, 34);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(312, 211);
+            this.richTextBox2.Size = new System.Drawing.Size(416, 259);
             this.richTextBox2.TabIndex = 2;
             this.richTextBox2.Text = "";
             // 
@@ -145,8 +163,8 @@ namespace WindowsFormsAppTranslator
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(9, 25);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer1.Location = new System.Drawing.Point(12, 31);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -158,9 +176,8 @@ namespace WindowsFormsAppTranslator
             // 
             this.splitContainer1.Panel2.Controls.Add(this.richTextBox2);
             this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Size = new System.Drawing.Size(640, 240);
-            this.splitContainer1.SplitterDistance = 320;
-            this.splitContainer1.SplitterWidth = 3;
+            this.splitContainer1.Size = new System.Drawing.Size(853, 295);
+            this.splitContainer1.SplitterDistance = 426;
             this.splitContainer1.TabIndex = 4;
             // 
             // label1
@@ -168,10 +185,9 @@ namespace WindowsFormsAppTranslator
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(2, 11);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(3, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.Size = new System.Drawing.Size(104, 17);
             this.label1.TabIndex = 5;
             this.label1.Text = "Исходный код:";
             // 
@@ -180,10 +196,9 @@ namespace WindowsFormsAppTranslator
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 11);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(3, 14);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 13);
+            this.label2.Size = new System.Drawing.Size(80, 17);
             this.label2.TabIndex = 6;
             this.label2.Text = "Результат:";
             // 
@@ -192,39 +207,23 @@ namespace WindowsFormsAppTranslator
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 274);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Location = new System.Drawing.Point(11, 337);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(129, 13);
+            this.label3.Size = new System.Drawing.Size(167, 17);
             this.label3.TabIndex = 7;
             this.label3.Text = "Состояние компиляции:";
             // 
-            // кодToolStripMenuItem
-            // 
-            this.кодToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.выполнитьКодToolStripMenuItem});
-            this.кодToolStripMenuItem.Name = "кодToolStripMenuItem";
-            this.кодToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.кодToolStripMenuItem.Text = "Код";
-            // 
-            // выполнитьКодToolStripMenuItem
-            // 
-            this.выполнитьКодToolStripMenuItem.Name = "выполнитьКодToolStripMenuItem";
-            this.выполнитьКодToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.выполнитьКодToolStripMenuItem.Text = "Выполнить код";
-            this.выполнитьКодToolStripMenuItem.Click += new System.EventHandler(this.выполнитьКодToolStripMenuItem_Click);
-            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(658, 446);
+            this.ClientSize = new System.Drawing.Size(877, 549);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.richTextBox3);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Компилятор";
             this.Load += new System.EventHandler(this.Form1_Load);

@@ -1,5 +1,5 @@
 DOSBox version 0.74-3
 Copyright 2002-2019 DOSBox Team, published under GNU GPL.
 ---
-CONFIG:Loading primary settings from config file C:\Users\Администратор\AppData\Local\DOSBox\dosbox-0.74-3.conf
+CONFIG:Loading primary settings from config file C:\Users\Алексей\AppData\Local\DOSBox\dosbox-0.74-3.conf
 MIDI:Opened device:win32

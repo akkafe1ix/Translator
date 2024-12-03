@@ -92,7 +92,9 @@ namespace ClassLibraryTranslator
             CheckLexem(Lexems.Delimiter);
 
             if (_lexicalAnalyzer.Lexem == Lexems.Bool || _lexicalAnalyzer.Lexem == Lexems.Int)
+            {   
                 ParseDecVar();
+            }
         }
 
         public void ParseSequenceOfInstructions()

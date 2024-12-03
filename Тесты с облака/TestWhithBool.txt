@@ -1,15 +1,24 @@
 int a,b,c, temp, othertemp, newtemp
+Boolean g
 begin
     c=1
     a=10
+    b=7
+    g=false
     while (a > c+4)
     {
         a=a+1
         if (a>=20) then
             a=5
+            g=true
         endif
         b=b+1
     }
     endwhile
-    print b
+
+    if  (g!=false) then
+        c=c+1
+    endif
+
+    print c
 end

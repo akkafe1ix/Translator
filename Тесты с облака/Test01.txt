@@ -1,5 +1,4 @@
 int a, n, res
-
 begin
     a = 2
     n = 5

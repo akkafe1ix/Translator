@@ -1,11 +1,12 @@
 int a, b, c
-bool g,z,d
+Boolean g, z, v
 begin
 a=1
 b=0
-g=true
-z=false
- if (g and z) then
+g=false
+z=true
+v=true
+ if (g xor z) then
    print a
     else
     print b

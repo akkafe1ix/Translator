@@ -88,7 +88,7 @@ namespace ClassLibraryTranslator
         private void InitializeKeywords()
         {
             AddKeyword("int", Lexems.Int);
-            AddKeyword("bool", Lexems.Bool);
+            AddKeyword("Boolean", Lexems.Bool);
             AddKeyword("begin", Lexems.Begin);
             AddKeyword("end", Lexems.End);
             AddKeyword("print", Lexems.Print);

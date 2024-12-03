@@ -5,7 +5,7 @@ a=1
 b=0
 g=true
 z=true
-v=true
+v=false
  if ((z and  (z or g)) xor v ) then
    print a
     else

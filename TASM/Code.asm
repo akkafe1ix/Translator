@@ -2,9 +2,9 @@ data segment
 a  dw    0
 b  dw    0
 c  dw    0
-g  db    0
-z  db    0
-l  db    0
+g  dw    0
+z  dw    0
+v  dw    0
 PRINT_BUF DB ' ' DUP(10)
 BUFEND    DB '$'
 data ends
@@ -28,28 +28,55 @@ mov ax, 1
 push ax
 pop ax
 mov g, ax
-mov ax, 0
+mov ax, 1
 push ax
 pop ax
 mov z, ax
-mov ax, g
+mov ax, 1
+push ax
+pop ax
+mov v, ax
+mov ax, z
 push ax
 mov ax, z
+push ax
+mov ax, g
+push ax
+pop ax
+pop bx
+or ax, bx
+push ax
+cmp ax, 0
+jnz label3
+jmp label1
+label3:
+pop ax
+pop bx
+and ax, bx
+push ax
+cmp ax, 0
+jz label1
+mov ax, v
 push ax
 pop ax
 pop bx
 xor ax, bx
 push ax
 cmp ax, 1
-jnz 
-jmp label1
-label1:
-pop ax
-mov l, ax
+jnz label1
+jmp label4
+label4:
 push ax
-mov ax, l
+mov ax, a
 CALL PRINT
 pop ax
+jmp label2
+label1:
+push ax
+mov ax, b
+CALL PRINT
+pop ax
+label2:
 mov ax,4c00h
 int 21h
 main endp

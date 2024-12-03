@@ -98,7 +98,7 @@ namespace ClassLibraryTranslator
             {
                 if (identifier.type == tType.Bool)
                 {
-                    AddInstruction(identifier.name + "  db    0");
+                    AddInstruction(identifier.name + "  dw    0");
                 }
                 else
                 {

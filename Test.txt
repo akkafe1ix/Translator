@@ -1,5 +1,4 @@
-﻿int a, b, c
-
+int a, b, c
 begin
     a = 7
     b = 4

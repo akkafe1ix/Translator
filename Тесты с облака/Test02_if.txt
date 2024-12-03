@@ -1,5 +1,4 @@
 int a,b,c
-
 begin
     a=77
     c=2

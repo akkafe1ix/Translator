@@ -24,3 +24,16 @@ C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\Wi
 C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.CopyComplete
 C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.exe
 C:\Users\Администратор\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.pdb
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\WindowsFormsAppTranslator.exe.config
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\WindowsFormsAppTranslator.exe
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\WindowsFormsAppTranslator.pdb
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\ClassLibraryTranslator.dll
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\bin\Debug\ClassLibraryTranslator.pdb
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.AssemblyReference.cache
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.Form1.resources
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.Properties.Resources.resources
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.GenerateResource.cache
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.CoreCompileInputs.cache
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.csproj.CopyComplete
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.exe
+C:\Users\Алексей\Desktop\Translator\ClassLibraryTranslator\WindowsFormsAppTranslator\obj\Debug\WindowsFormsAppTranslator.pdb
