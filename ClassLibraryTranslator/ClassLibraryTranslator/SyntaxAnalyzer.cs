@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ClassLibraryTranslator
 {
@@ -35,67 +36,66 @@ namespace ClassLibraryTranslator
 
         public void ParseDecVar()
         {
-            tType varType = tType.None;
+            // Проверяем ключевое слово Var
+            CheckLexem(Lexems.Var);
 
-            if (_lexicalAnalyzer.Lexem == Lexems.Int)
+            // Обрабатываем список переменных, разделенных запятыми
+            List <string> variableNames = new List <string>();
+            while (_lexicalAnalyzer.Lexem == Lexems.Name)
             {
-                CheckLexem(Lexems.Int);
-                varType = tType.Int;
-            }
-            else if ((_lexicalAnalyzer.Lexem == Lexems.Bool))
-            {
-                CheckLexem(Lexems.Bool);
-                varType = tType.Bool;
-            }
-            else
-            {
-                CheckLexem(Lexems.Type);
-            }
-            if (_lexicalAnalyzer.Lexem != Lexems.Name)
-            {
-                _errors.AddError(
-                    $"Ожидалось объявление переменной (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine}, символ:'{Convert.ToChar(_reader.Character)}')");
-            }
-            else
-            {
-                var x = _nameTable.AddIdentifier(_lexicalAnalyzer.Name, tCat.Var, varType);
-                if (x == null)
-                {
-                    _errors.AddError(
-                        $"Переменная с именем {_lexicalAnalyzer.Name} уже существет (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine}, символ:'{Convert.ToChar(_reader.Character)}')");
-                }
-
+                variableNames.Add(_lexicalAnalyzer.Name);
                 _lexicalAnalyzer.ParseNextLexem();
-            }
 
-            while (_lexicalAnalyzer.Lexem == Lexems.Comma)
-            {
-                _lexicalAnalyzer.ParseNextLexem();
-                if (_lexicalAnalyzer.Lexem != Lexems.Name)
+                if (_lexicalAnalyzer.Lexem == Lexems.Comma)
                 {
-                    _errors.AddError(
-                        $"Ожидалось объявление переменной (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine}, символ:'{Convert.ToChar(_reader.Character)}')");
+                    _lexicalAnalyzer.ParseNextLexem(); // Пропускаем запятую
                 }
                 else
                 {
-                    var x = _nameTable.AddIdentifier(_lexicalAnalyzer.Name, tCat.Var, varType);
-                    if (x == null)
-                    {
-                        _errors.AddError(
-                            $"Переменная с именем {_lexicalAnalyzer.Name} уже существет (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine}, символ:'{Convert.ToChar(_reader.Character)}')");
-                    }
-
-                    _lexicalAnalyzer.ParseNextLexem();
+                    break; // Заканчиваем список переменных
                 }
             }
 
+            // Проверяем наличие двоеточия
+            CheckLexem(Lexems.Colon);
+
+            // Определяем тип переменных
+            tType varType = tType.None;
+            if (_lexicalAnalyzer.Lexem == Lexems.Bool)
+            {
+                varType = tType.Bool;
+                _lexicalAnalyzer.ParseNextLexem();
+            }
+            else if (_lexicalAnalyzer.Lexem == Lexems.Int)
+            {
+                varType = tType.Int;
+                _lexicalAnalyzer.ParseNextLexem();
+            }
+            else
+            {
+                _errors.AddError($"Ожидался тип переменных (Boolean или Int), а получили {_lexicalAnalyzer.Lexem}");
+            }
+
+            // Добавляем переменные в таблицу имен
+            foreach (var variableName in variableNames)
+            {
+                var x = _nameTable.AddIdentifier(variableName, tCat.Var, varType);
+                if (x == null)
+                {
+                    _errors.AddError($"Переменная с именем {variableName} уже существует (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine})");
+                }
+            }
+
+            // Проверяем на конец строки или следующий оператор
             CheckLexem(Lexems.Delimiter);
 
-            if (_lexicalAnalyzer.Lexem == Lexems.Bool || _lexicalAnalyzer.Lexem == Lexems.Int)
-            {   
+            // Рекурсивно вызываем метод, если обнаружено новое объявление
+            if (_lexicalAnalyzer.Lexem == Lexems.Var)
+            {
                 ParseDecVar();
             }
         }
+
 
         public void ParseSequenceOfInstructions()
         {
@@ -115,6 +115,7 @@ namespace ClassLibraryTranslator
                 if (x != null)
                 {
                     ParseAssignInstruction(x.Value.type);
+                    CheckLexem(Lexems.Semi);
                     _codeGenerator.AddInstruction("pop ax");
                     _codeGenerator.AddInstruction("mov " + x.Value.name + ", ax");
                 }

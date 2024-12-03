@@ -134,10 +134,10 @@ namespace WindowsFormsAppTranslator
         {
             if ((richTextBox3.TextLength == 0)&(richTextBox2.TextLength != 0))
             {
-                string fileName = "C:\\Users\\Алексей\\Desktop\\Translator\\TASM\\Code.asm";
+                string fileName = "C:\\Users\\Администратор\\Desktop\\Translator\\TASM\\Code.asm";
                 File.WriteAllText(fileName, richTextBox2.Text);
                 Process process = new Process();
-                process.StartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe", @"C:\Users\Алексей\Desktop\Translator\TASM\RUN.bat -noconsole");
+                process.StartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe", @"C:\Users\Администратор\Desktop\Translator\TASM\RUN.bat -noconsole");
                 process.Start();
             }
             else if(richTextBox3.TextLength != 0)

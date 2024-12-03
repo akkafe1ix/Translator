@@ -16,12 +16,15 @@ namespace ClassLibraryTranslator
         RightBracket,
         LeftBracketF,
         RightBracketF,
+        Semi,
+        Colon,
 
         Number,
         Name,
         Type,
         Int,
         Bool,
+        Var,
 
         Less,
         LessOrEqual,
@@ -87,11 +90,12 @@ namespace ClassLibraryTranslator
 
         private void InitializeKeywords()
         {
-            AddKeyword("int", Lexems.Int);
+            AddKeyword("Integer", Lexems.Int);
             AddKeyword("Boolean", Lexems.Bool);
-            AddKeyword("begin", Lexems.Begin);
-            AddKeyword("end", Lexems.End);
-            AddKeyword("print", Lexems.Print);
+            AddKeyword("Var", Lexems.Var);
+            AddKeyword("Begin", Lexems.Begin);
+            AddKeyword("End", Lexems.End);
+            AddKeyword("Print", Lexems.Print);
             AddKeyword("if", Lexems.If);
             AddKeyword("then", Lexems.Then);
             AddKeyword("elseif", Lexems.ElseIf);
@@ -163,6 +167,16 @@ namespace ClassLibraryTranslator
             {
                 _reader.ReadNextCharacter();
                 _lexem = Lexems.Comma;
+            }
+            else if (_reader.Character == ';')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Semi;
+            }
+            else if (_reader.Character == ':')
+            {
+                _reader.ReadNextCharacter();
+                _lexem = Lexems.Colon;
             }
             else if (_reader.Character == '(')
             {
