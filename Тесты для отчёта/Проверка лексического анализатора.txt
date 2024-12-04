@@ -1,0 +1,7 @@
+Var g, z, v, k :Boolean;
+Begin
+    z=True;
+    v=False;
+    k= z XOR v ;
+    Print k
+End

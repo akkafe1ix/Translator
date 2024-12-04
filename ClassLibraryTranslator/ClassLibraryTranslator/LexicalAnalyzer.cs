@@ -109,12 +109,12 @@ namespace ClassLibraryTranslator
             AddKeyword("repeat", Lexems.Repeat);
             AddKeyword("when", Lexems.When);
             AddKeyword("endfor", Lexems.EndFor);
-            AddKeyword("not", Lexems.Not);
-            AddKeyword("or", Lexems.Or);
-            AddKeyword("xor", Lexems.Xor);
-            AddKeyword("and", Lexems.And);
-            AddKeyword("true", Lexems.True);
-            AddKeyword("false", Lexems.False);
+            AddKeyword("NOT", Lexems.Not);
+            AddKeyword("OR", Lexems.Or);
+            AddKeyword("XOR", Lexems.Xor);
+            AddKeyword("AND", Lexems.And);
+            AddKeyword("True", Lexems.True);
+            AddKeyword("False", Lexems.False);
 
         }
 
@@ -295,6 +295,11 @@ namespace ClassLibraryTranslator
                 {
                     throw new Exception("Invalid symbol '|'");
                 }
+            }
+            else if (_reader.Character == '.')
+            {
+
+                _reader.ReadNextCharacter();
             }
             else if (_reader.Character == '^')
             {

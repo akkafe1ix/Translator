@@ -1,9 +1,11 @@
-Var a, b, c: Integer
-Var g, z, v, res :Boolean
+Var g, z, v, k :Boolean;
 Begin
-    g=true;
+    g=false;
     z=true;
     v=true;
-    res= (z and v) ;
-    Print res
+    k=( not ( v and  ( z or g ) ) xor false )  ;
+    Print k
 End
+
+
+

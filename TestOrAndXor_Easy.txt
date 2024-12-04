@@ -1,14 +1,15 @@
-int a, b, c
-Boolean g, z, v
-begin
-a=1
-b=0
-g=false
-z=true
-v=true
- if (g xor z) then
-   print a
+Var a, b, c :Integer;
+Var g, z, v :Boolean;
+Begin
+    a=1;
+    b=0;
+    g=false;
+    z=true;
+    v=true;
+    if (g xor z) then
+        Print a
     else
-    print b
-endif
-end
+        Print b
+    endif
+End
+

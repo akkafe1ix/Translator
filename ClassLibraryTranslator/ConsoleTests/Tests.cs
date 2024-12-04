@@ -7,7 +7,7 @@ namespace ConsoleTests
     {
         static void Main(string[] args)
         {
-            string path = "C:\\Users\\Администратор\\Desktop\\Translator\\TestWhileEasy.txt";
+            string path = "C:\\Users\\Администратор\\Desktop\\Translator\\Тесты для отчёта\\Проверка лексического анализатора.txt";
 
             // Создание экземпляров зависимых классов
             var reader = new Reader();

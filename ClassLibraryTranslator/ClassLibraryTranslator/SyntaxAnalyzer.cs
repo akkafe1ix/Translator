@@ -26,7 +26,9 @@ namespace ClassLibraryTranslator
             if (_lexicalAnalyzer.Lexem != expectLexem)
             {
                 _errors.AddError(
-                    $"Ожидалось {expectLexem}, а получили {_lexicalAnalyzer.Lexem} (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine}, символ:'{Convert.ToChar(_reader.Character)}')");
+                    $"Ожидалось {expectLexem}, а получили {_lexicalAnalyzer.Lexem} " +
+                    $"(Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine}, " +
+                    $"символ:'{Convert.ToChar(_reader.Character)}')");
             }
             else
             {
@@ -82,10 +84,12 @@ namespace ClassLibraryTranslator
                 var x = _nameTable.AddIdentifier(variableName, tCat.Var, varType);
                 if (x == null)
                 {
-                    _errors.AddError($"Переменная с именем {variableName} уже существует (Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine})");
+                    _errors.AddError($"Переменная с именем {variableName} уже существует " +
+                        $"(Строка:{_reader.LineNumber}, позиция:{_reader.PositionInLine})");
                 }
             }
 
+            CheckLexem(Lexems.Semi);
             // Проверяем на конец строки или следующий оператор
             CheckLexem(Lexems.Delimiter);
 
@@ -122,7 +126,9 @@ namespace ClassLibraryTranslator
                 else
                 {
                     _errors.AddError(
-                        $"Не удалось найти переменную с именем {_lexicalAnalyzer.Name}. (Строка {_reader.LineNumber}, позиция {_reader.PositionInLine}, символ '{_reader.Character}')");
+                        $"Не удалось найти переменную с именем {_lexicalAnalyzer.Name}. " +
+                        $"(Строка {_reader.LineNumber}, позиция {_reader.PositionInLine}, " +
+                        $"символ '{_reader.Character}')");
                 }
             }
             else if (_lexicalAnalyzer.Lexem == Lexems.Print)
@@ -145,6 +151,8 @@ namespace ClassLibraryTranslator
             if (_lexicalAnalyzer.Lexem == Lexems.Assign)
             {
                 _lexicalAnalyzer.ParseNextLexem();
+
+
                 tType t = ParseExpressionLogic();
                 if (varType != t)
                 {
@@ -272,6 +280,7 @@ namespace ClassLibraryTranslator
             {
                 _codeGenerator.AddInstruction("mov ax, " + _lexicalAnalyzer.Number);
                 _codeGenerator.AddInstruction("push ax");
+                var cur = _reader.Character;
                 _lexicalAnalyzer.ParseNextLexem();
                 return tType.Int;
             }
@@ -373,40 +382,37 @@ namespace ClassLibraryTranslator
 
         public void ParseWhileLoop()
         {
-            CheckLexem(Lexems.While);  // Проверка ключевого слова "while"
+            CheckLexem(Lexems.While);  
 
-            _codeGenerator.AddLabel();  // Метка для начала цикла (upLabel)
-            string upLabel = _codeGenerator.ReturnCurrentLabel();  // Получаем метку начала
-            _codeGenerator.AddLabel();  // Метка для конца цикла (lowLabel)
-            string lowLabel = _codeGenerator.ReturnCurrentLabel();  // Получаем метку конца
-            _currentLabel = lowLabel;  // Устанавливаем текущую метку для завершения
+            _codeGenerator.AddLabel();  
+            string upLabel = _codeGenerator.ReturnCurrentLabel();  
+            _codeGenerator.AddLabel();  
+            string lowLabel = _codeGenerator.ReturnCurrentLabel();  
+            _currentLabel = lowLabel;  
 
             _codeGenerator.AddInstruction(upLabel + ":");
-            // Разбор условия while (a < 14)
-            ParseExpressionLogic();  // Используем ParseExpression для разбора условия
-
+            
+            ParseExpressionLogic();  
 
              _lexicalAnalyzer.ParseNextLexem();
-            // Проверка тела цикла: если это составной оператор в фигурных скобках
+            
             if (_lexicalAnalyzer.Lexem == Lexems.LeftBracketF)
             {
                 _lexicalAnalyzer.ParseNextLexem();
-                ParseSequenceOfInstructions();  // Разбор инструкций внутри фигурных скобок
-                CheckLexem(Lexems.RightBracketF);  // Проверка закрывающей фигурной скобки
+                ParseSequenceOfInstructions();  
+                CheckLexem(Lexems.RightBracketF);  
 
             }
             else
             {
-                // Если оператор простой, разбираем одну инструкцию
-                ParseInstruction();  // Разбор одной инструкции
+                
+                ParseInstruction();  
             }
             _lexicalAnalyzer.ParseNextLexem();
 
-            // Завершение цикла (переход к lowLabel)
-            _codeGenerator.AddInstruction("jmp " + upLabel);  // Переход к метке upLabel, чтобы вернуться к проверке условия
-            _codeGenerator.AddInstruction(lowLabel + ":");  // Метка для завершения цикла
-            CheckLexem(Lexems.EndWhile);  // Проверка ключевого слова "endwhile"
-            //_lexicalAnalyzer.ParseNextLexem();
+            _codeGenerator.AddInstruction("jmp " + upLabel);  
+            _codeGenerator.AddInstruction(lowLabel + ":");  
+            CheckLexem(Lexems.EndWhile);  
         }
 
 
@@ -488,7 +494,28 @@ namespace ClassLibraryTranslator
 
         private tType ParseLogicalOr()
         {
-            tType type = ParseLogicalAnd();
+            tType type;
+
+            if (_lexicalAnalyzer.Lexem == Lexems.Not)
+            {
+                _lexicalAnalyzer.ParseNextLexem();
+                type = ParseLogicalAnd();
+
+                if (type != tType.Bool)
+                {
+                    _errors.AddError("Операция NOT применима только к логическим типам.");
+                }
+
+                // Генерация кода для операции NOT
+                _codeGenerator.AddInstruction("pop ax"); // Извлекаем значение из стека
+                _codeGenerator.AddInstruction("not ax"); // Инвертируем значение
+                _codeGenerator.AddInstruction("and ax, 1"); // Ограничиваем результат до булевого значения (0 или 1)
+                _codeGenerator.AddInstruction("push ax"); // Возвращаем результат в стек
+            }
+            else
+            {
+                type = ParseLogicalAnd();
+            }
 
             while (_lexicalAnalyzer.Lexem == Lexems.Or)
             {
@@ -545,9 +572,31 @@ namespace ClassLibraryTranslator
             return type;
         }
 
+
         private tType ParseLogicalAnd()
         {
-            tType type = ParseExpression();
+            tType type;
+
+            if (_lexicalAnalyzer.Lexem == Lexems.Not)
+            {
+                _lexicalAnalyzer.ParseNextLexem();
+                type = ParseExpression();
+
+                if (type != tType.Bool)
+                {
+                    _errors.AddError("Операция NOT применима только к логическим типам.");
+                }
+
+                // Генерация кода для операции NOT
+                _codeGenerator.AddInstruction("pop ax"); // Извлекаем значение из стека
+                _codeGenerator.AddInstruction("not ax"); // Инвертируем значение
+                _codeGenerator.AddInstruction("and ax, 1"); // Ограничиваем результат до булевого значения (0 или 1)
+                _codeGenerator.AddInstruction("push ax"); // Возвращаем результат в стек
+            }
+            else
+            {
+                type = ParseExpression();
+            }
 
             while (_lexicalAnalyzer.Lexem == Lexems.And)
             {
@@ -562,7 +611,7 @@ namespace ClassLibraryTranslator
                     _errors.AddError("Несовместимые типы для логической операции И.");
                 }
 
-                // Генерация кода для операции AND
+                // Генерация кода для операции AND  
                 _codeGenerator.AddInstruction("pop ax"); // Правый операнд
                 _codeGenerator.AddInstruction("pop bx"); // Левый операнд
                 _codeGenerator.AddInstruction("and ax, bx");
@@ -574,6 +623,7 @@ namespace ClassLibraryTranslator
             }
             return type;
         }
+
 
 
         public void Compile()
