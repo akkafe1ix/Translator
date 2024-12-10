@@ -513,6 +513,7 @@ namespace ClassLibraryTranslator
             if (_lexicalAnalyzer.Lexem == Lexems.Not)
             {
                 _lexicalAnalyzer.ParseNextLexem();
+                _lexicalAnalyzer.ParseNextLexem();
                 type = ParseLogicalAnd();
 
                 if (type != tType.Bool)
@@ -537,6 +538,7 @@ namespace ClassLibraryTranslator
                 _codeGenerator.AddLabel();
                 string exitLabel = _codeGenerator.ReturnCurrentLabel();
 
+                _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
                 tType rightType = ParseLogicalAnd();
                 if (type != rightType || type != tType.Bool)
@@ -563,6 +565,7 @@ namespace ClassLibraryTranslator
                 _codeGenerator.AddLabel();
                 string exitLabel = _codeGenerator.ReturnCurrentLabel();
 
+                _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
                 tType rightType = ParseLogicalAnd();
                 if (type != rightType || type != tType.Bool)
@@ -594,6 +597,7 @@ namespace ClassLibraryTranslator
             if (_lexicalAnalyzer.Lexem == Lexems.Not)
             {
                 _lexicalAnalyzer.ParseNextLexem();
+                _lexicalAnalyzer.ParseNextLexem();
                 type = ParseExpression();
 
                 if (type != tType.Bool)
@@ -614,6 +618,7 @@ namespace ClassLibraryTranslator
 
             while (_lexicalAnalyzer.Lexem == Lexems.And)
             {
+                _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
 
                 // Сохраняем текущую метку, так как ParseComparison может её изменить

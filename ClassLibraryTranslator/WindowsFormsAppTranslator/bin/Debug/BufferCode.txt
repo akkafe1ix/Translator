@@ -1,24 +1,7 @@
-Var a, b, c :Integer;
-Var g, z, v :Boolean;
+Var g, z, v, k :Boolean;
 Begin
-    a=0;
-    b=34;
-    c=0;
-    g=0;
     z=1;
-    v=1;
-    while ( NOT ( v AND  ( z OR g ) ) XOR z )
-    {
-        if (a>b*2) then
-            v=0; 
-        else 
-            v=1;     
-        endif
-
-        while (a<75)
-           a=a+1;
-        
-         c=c+1;
-    }
-    Print c
+    v=0;
+    k=  (z .OR. v) ;
+    Print k
 End

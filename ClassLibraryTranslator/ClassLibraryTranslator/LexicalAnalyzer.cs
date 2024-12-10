@@ -300,6 +300,68 @@ namespace ClassLibraryTranslator
             {
 
                 _reader.ReadNextCharacter();
+                if (_reader.Character == 'N')
+                {
+                    _reader.ReadNextCharacter();
+                    if (_reader.Character == 'O')
+                    {
+                        _reader.ReadNextCharacter();
+                        if (_reader.Character == 'T')
+                        {
+                            _reader.ReadNextCharacter();
+                            if (_reader.Character == '.')
+                            {
+                                _lexem = Lexems.Not;
+                            }
+                        }
+                    }
+                }
+                if (_reader.Character == 'X')
+                {
+                    _reader.ReadNextCharacter();
+                    if (_reader.Character == 'O')
+                    {
+                        _reader.ReadNextCharacter();
+                        if (_reader.Character == 'R')
+                        {
+                            _reader.ReadNextCharacter();
+                            if (_reader.Character == '.')
+                            {
+                                _lexem = Lexems.Xor;
+                            }
+                        }
+                    }
+                }
+                if (_reader.Character == 'A')
+                {
+                    _reader.ReadNextCharacter();
+                    if (_reader.Character == 'N')
+                    {
+                        _reader.ReadNextCharacter();
+                        if (_reader.Character == 'D')
+                        {
+                            _reader.ReadNextCharacter();
+                            if (_reader.Character == '.')
+                            {
+                                _lexem = Lexems.And;
+                            }
+                        }
+                    }
+                }
+
+                if (_reader.Character == 'O')
+                {
+                    _reader.ReadNextCharacter();
+                    if (_reader.Character == 'R')
+                    {
+                        _reader.ReadNextCharacter();
+                        if (_reader.Character == '.')
+                        {
+                            _lexem = Lexems.Or;
+                        }
+                    }
+                }
+
             }
             else if (_reader.Character == '^')
             {
