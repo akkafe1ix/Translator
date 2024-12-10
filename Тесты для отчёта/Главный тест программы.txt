@@ -7,7 +7,7 @@ Begin
     g=0;
     z=1;
     v=1;
-    while ( NOT ( v AND  ( z OR g ) ) XOR z )
+    while ( .NOT. ( v .AND.  ( 1 .OR. 0 ) ) .XOR. z )
     {
         if (a>b*2) then
             v=0; 

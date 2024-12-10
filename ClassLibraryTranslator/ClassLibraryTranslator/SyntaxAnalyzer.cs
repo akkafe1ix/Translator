@@ -541,6 +541,11 @@ namespace ClassLibraryTranslator
                 _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
                 tType rightType = ParseLogicalAnd();
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    rightType = tType.Bool;
+                    type = tType.Bool;
+                }
                 if (type != rightType || type != tType.Bool)
                 {
                     _errors.AddError("Несовместимые типы для логической операции ИЛИ.");
@@ -568,6 +573,12 @@ namespace ClassLibraryTranslator
                 _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
                 tType rightType = ParseLogicalAnd();
+
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    rightType = tType.Bool;
+                    type = tType.Bool;
+                }
                 if (type != rightType || type != tType.Bool)
                 {
                     _errors.AddError("Несовместимые типы для логической операции XOR.");
@@ -625,6 +636,12 @@ namespace ClassLibraryTranslator
                 string savedLabel = _currentLabel;
 
                 tType rightType = ParseExpression();
+
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    rightType = tType.Bool;
+                    type = tType.Bool;
+                }
                 if (type != rightType || type != tType.Bool)
                 {
                     _errors.AddError("Несовместимые типы для логической операции И.");
