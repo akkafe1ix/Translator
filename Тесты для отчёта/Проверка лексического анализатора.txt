@@ -1,7 +1,7 @@
 Var g, z, v, k :Boolean;
 Begin
-    z=True;
-    v=False;
-    k= z XOR v ;
+    z=0;
+    v=0;
+    k= NOT (z XOR v) ;
     Print k
 End

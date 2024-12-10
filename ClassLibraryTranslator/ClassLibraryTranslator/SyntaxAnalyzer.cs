@@ -11,6 +11,7 @@ namespace ClassLibraryTranslator
         public readonly Errors _errors;
         public readonly Reader _reader;
         public string _currentLabel = "";
+        public string _checkbool = "";
 
         public SyntaxAnalyzer(LexicalAnalyzer lexicalAnalyzer, CodeGenerator codeGenerator, NameTable nameTable, Errors errors, Reader reader)
         {
@@ -154,10 +155,20 @@ namespace ClassLibraryTranslator
 
 
                 tType t = ParseExpressionLogic();
+
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    if (varType == tType.Int)
+                        t = tType.Int;
+                    if (varType == tType.Bool)
+                        t = tType.Bool;
+                }
+                
                 if (varType != t)
                 {
                     _errors.AddError($"Несовместимые типы при присваивании.");
                 }
+               
             }
             else
             {
@@ -280,6 +291,7 @@ namespace ClassLibraryTranslator
             {
                 _codeGenerator.AddInstruction("mov ax, " + _lexicalAnalyzer.Number);
                 _codeGenerator.AddInstruction("push ax");
+                _checkbool = Convert.ToString(_lexicalAnalyzer.Number);
                 var cur = _reader.Character;
                 _lexicalAnalyzer.ParseNextLexem();
                 return tType.Int;
@@ -288,6 +300,7 @@ namespace ClassLibraryTranslator
             {
                 _codeGenerator.AddInstruction("mov ax, 1");
                 _codeGenerator.AddInstruction("push ax");
+                _checkbool = "1";
                 _lexicalAnalyzer.ParseNextLexem();
                 return tType.Bool;
             }
@@ -295,6 +308,7 @@ namespace ClassLibraryTranslator
             {
                 _codeGenerator.AddInstruction("mov ax, 0");
                 _codeGenerator.AddInstruction("push ax");
+                _checkbool = "0";
                 _lexicalAnalyzer.ParseNextLexem();
                 return tType.Bool;
             }
