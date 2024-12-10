@@ -3,6 +3,7 @@ Var g, z, v :Boolean;
 Begin
     a=0;
     b=34;
+    c=0;
     g=0;
     z=1;
     v=1;
@@ -15,9 +16,9 @@ Begin
         endif
 
         while (a<75)
-            a=a+1;
-        endwhile
+           a=a+1;
+        
+         c=c+1;
     }
-    endwhile
     Print a
 End

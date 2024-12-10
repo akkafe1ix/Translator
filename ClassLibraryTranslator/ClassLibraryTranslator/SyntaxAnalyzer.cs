@@ -422,11 +422,11 @@ namespace ClassLibraryTranslator
                 
                 ParseInstruction();  
             }
-            _lexicalAnalyzer.ParseNextLexem();
+            //_lexicalAnalyzer.ParseNextLexem();
 
             _codeGenerator.AddInstruction("jmp " + upLabel);  
             _codeGenerator.AddInstruction(lowLabel + ":");  
-            CheckLexem(Lexems.EndWhile);  
+            //CheckLexem(Lexems.EndWhile);  
         }
 
 
