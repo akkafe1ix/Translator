@@ -163,7 +163,7 @@ namespace ClassLibraryTranslator
                     if (varType == tType.Bool)
                         t = tType.Bool;
                 }
-                
+                _checkbool = "";
                 if (varType != t)
                 {
                     _errors.AddError($"Несовместимые типы при присваивании.");
@@ -515,7 +515,11 @@ namespace ClassLibraryTranslator
                 _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
                 type = ParseLogicalAnd();
-
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    type = tType.Bool;
+                }
+                _checkbool = "";
                 if (type != tType.Bool)
                 {
                     _errors.AddError("Операция NOT применима только к логическим типам.");
@@ -540,13 +544,22 @@ namespace ClassLibraryTranslator
 
                 _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    type = tType.Bool;
+                }
+                if (type != tType.Bool)
+                {
+                    _errors.AddError("Несовместимые типы для логической операции ИЛИ.");
+                }
+                _checkbool = "";
                 tType rightType = ParseLogicalAnd();
                 if (_checkbool == "0" || _checkbool == "1")
                 {
                     rightType = tType.Bool;
-                    type = tType.Bool;
                 }
-                if (type != rightType || type != tType.Bool)
+                _checkbool = "";
+                if (rightType != tType.Bool)
                 {
                     _errors.AddError("Несовместимые типы для логической операции ИЛИ.");
                 }
@@ -572,14 +585,23 @@ namespace ClassLibraryTranslator
 
                 _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    type = tType.Bool;
+                }
+                if (type != tType.Bool)
+                {
+                    _errors.AddError("Несовместимые типы для логической операции XOR.");
+                }
+                _checkbool = "";
                 tType rightType = ParseLogicalAnd();
 
                 if (_checkbool == "0" || _checkbool == "1")
                 {
                     rightType = tType.Bool;
-                    type = tType.Bool;
                 }
-                if (type != rightType || type != tType.Bool)
+                _checkbool = "";
+                if (rightType != tType.Bool)
                 {
                     _errors.AddError("Несовместимые типы для логической операции XOR.");
                 }
@@ -610,7 +632,11 @@ namespace ClassLibraryTranslator
                 _lexicalAnalyzer.ParseNextLexem();
                 _lexicalAnalyzer.ParseNextLexem();
                 type = ParseExpression();
-
+                if (_checkbool == "0" || _checkbool == "1")
+                {
+                    type = tType.Bool;
+                }
+                _checkbool = "";
                 if (type != tType.Bool)
                 {
                     _errors.AddError("Операция NOT применима только к логическим типам.");
@@ -634,18 +660,26 @@ namespace ClassLibraryTranslator
 
                 // Сохраняем текущую метку, так как ParseComparison может её изменить
                 string savedLabel = _currentLabel;
-
-                tType rightType = ParseExpression();
-
-                if (_checkbool == "0" || _checkbool == "1")
+                if(_checkbool == "0" || _checkbool == "1")
                 {
-                    rightType = tType.Bool;
                     type = tType.Bool;
                 }
-                if (type != rightType || type != tType.Bool)
+                if (type != tType.Bool)
                 {
                     _errors.AddError("Несовместимые типы для логической операции И.");
                 }
+                _checkbool = "";
+                tType rightType = ParseExpression();
+
+                if(_checkbool == "0" || _checkbool == "1")
+                {
+                    rightType = tType.Bool;
+                }
+                if (rightType != tType.Bool)
+                {
+                    _errors.AddError("Несовместимые типы для логической операции И.");
+                }
+                _checkbool = "";
 
                 // Генерация кода для операции AND  
                 _codeGenerator.AddInstruction("pop ax"); // Правый операнд

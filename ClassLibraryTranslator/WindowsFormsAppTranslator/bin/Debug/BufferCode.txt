@@ -1,7 +1,9 @@
-Var a, n, res :Integer;
+Var g, z, v, k :Boolean;
+Var l:Integer;
 Begin
-    a = 2;
-    n = 5;
-    res=a+3*(n+1)/a-2+1;
-    Print res
+    g=0;
+    z=1;
+    v=1;
+    k= (.NOT. z) ;
+    Print k
 End
