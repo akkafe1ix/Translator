@@ -1,8 +1,8 @@
-int a, b, c
-begin
-    a = 7
-    b = 4
-    a=a*a-(7*b)
-    c=(a-b)*a+b
-    print c
-end
+Var a, b, c :Integer;
+Begin
+    a = 7;
+    b = 4;
+    a=a*a-(7*b);
+    c=(a-b)*a+b;
+    Print c
+End

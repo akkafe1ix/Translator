@@ -3,9 +3,6 @@ Begin
     g=0;
     z=1;
     v=1;
-    k=( .NOT. ( v .AND.  ( z .OR. g ) ) .XOR. 1 )  ;
+    k= (.NOT. (v .AND. (z .OR. g)) .XOR. 1) ;
     Print k
 End
-
-
-

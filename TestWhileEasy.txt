@@ -1,11 +1,10 @@
-int a, b, c
-begin
-    a = 7
+Var a, b, c :Integer;
+Begin
+    a = 7;
     while (b<10)
 {
-    b=b+1
-    a=a+2
+    b=b+1;
+    a=a+2;
 }
-    endwhile 
-    print a
-end
+    Print a
+End

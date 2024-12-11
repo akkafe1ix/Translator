@@ -3,10 +3,10 @@ Var g, z, v :Boolean;
 Begin
     a=1;
     b=0;
-    g=false;
-    z=true;
-    v=true;
-    if ( not ( v and  ( z or g ) ) xor true )  then
+    g=0;
+    z=1;
+    v=1;
+    if ( .NOT. ( v .AND.  ( z .OR. g ) ) .XOR. 1 )  then
         Print a
     else
         Print b

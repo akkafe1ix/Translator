@@ -1,12 +1,12 @@
-int a, b, c
-begin
-    a = 7
-    b = 10
+Var a, b, c :Integer;
+Begin
+    a = 7;
+    b = 10;
     if (b>10) then
-    print b
+    Print b
     elseif (b<10+1) then
-    print b
+    Print b
     else 
-    print a
+    Print a
     endif
-end
+End
